@@ -1,0 +1,17 @@
+<h1 class="mb-4">Toutes les Annonces</h1>
+
+<%= link_to 'Créer une annonce', new_annonce_path, class: "btn btn-success mb-3" %>
+
+<% @annonces.each do |annonce| %>
+  <div class="card mb-3">
+    <div class="card-body">
+      <h5 class="card-title"><%= annonce.titre %></h5>
+      <p class="card-text"><%= annonce.description %></p>
+      <p class="card-text"><strong>Prix:</strong> <%= annonce.prix %> MAD</p>
+      <p class="card-text"><strong>Localisation:</strong> <%= annonce.localisation %></p>
+      <%= link_to 'Voir', annonce_path(annonce), class: "btn btn-primary btn-sm" %>
+      <%= link_to 'Modifier', edit_annonce_path(annonce), class: "btn btn-warning btn-sm" %>
+      <%= link_to 'Supprimer', annonce_path(annonce), method: :delete, data: { confirm: "Supprimer cette annonce ?" }, class: "btn btn-danger btn-sm" %>
+    </div>
+  </div>
+<% end %>
