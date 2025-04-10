@@ -1,2 +1,13 @@
-<h1>Annonces#show</h1>
-<p>Find me in app/views/annonces/show.html.erb</p>
+<h1><%= @annonce.titre %></h1>
+
+<div class="mb-3">
+  <p><strong>Description:</strong> <%= @annonce.description %></p>
+  <p><strong>Prix:</strong> <%= @annonce.prix %> MAD</p>
+  <p><strong>Localisation:</strong> <%= @annonce.localisation %></p>
+  <p><strong>Date:</strong> <%= @annonce.date_publication.strftime("%d %B %Y") %></p>
+  <p><strong>Image:</strong></p>
+  <%#= image_tag @annonce.image, class: "img-fluid", alt: @annonce.titre if @annonce.image.present? %>
+</div>
+
+<%= link_to 'Modifier', edit_annonce_path(@annonce), class: "btn btn-warning" %>
+<%= link_to 'Retour', annonces_path, class: "btn btn-secondary" %>

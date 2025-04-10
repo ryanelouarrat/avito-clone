@@ -1,2 +1,5 @@
-<h1>Annonces#edit</h1>
-<p>Find me in app/views/annonces/edit.html.erb</p>
+<h1>Modifier l'Annonce</h1>
+
+<%= render 'form', annonce: @annonce %>
+
+<%= link_to 'Retour', annonce_path(@annonce), class: "btn btn-secondary mt-3" %>

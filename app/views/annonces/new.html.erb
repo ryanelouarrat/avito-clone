@@ -1,2 +1,5 @@
-<h1>Annonces#new</h1>
-<p>Find me in app/views/annonces/new.html.erb</p>
+<h1>Nouvelle Annonce</h1>
+
+<%= render 'form', annonce: @annonce %>
+
+<%= link_to 'Retour', annonces_path, class: "btn btn-secondary mt-3" %>
