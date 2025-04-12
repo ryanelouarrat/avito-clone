@@ -18,6 +18,8 @@ gem "stimulus-rails"
 gem "jbuilder"
 gem 'bcrypt', '~> 3.1.7'
 
+# Gemfile
+#gem 'carrierwave', '~> 2.2'
 
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

@@ -1,45 +1,169 @@
-<%= form_with model: annonce, local: true do |form| %>
-    <% if annonce.errors.any? %>
-      <div class="alert alert-danger">
-        <h4>Erreurs:</h4>
-        <ul>
-          <% annonce.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-  
-    <div class="mb-3">
-      <%= form.label :titre, class: "form-label" %>
-      <%= form.text_field :titre, class: "form-control" %>
+<%= form_with model: annonce, local: true, html: { multipart: true } do |form| %>
+  <% if annonce.errors.any? %>
+    <div class="alert alert-danger">
+      <h4>Erreurs:</h4>
+      <ul>
+        <% annonce.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
     </div>
-  
-    <div class="mb-3">
-      <%= form.label :description, class: "form-label" %>
-      <%= form.text_area :description, class: "form-control" %>
-    </div>
-  
-    <div class="mb-3">
-      <%= form.label :prix, class: "form-label" %>
-      <%= form.number_field :prix, class: "form-control" %>
-    </div>
-  
-    <div class="mb-3">
-      <%= form.label :localisation, class: "form-label" %>
-      <%= form.text_field :localisation, class: "form-control" %>
-    </div>
-  
-    <div class="mb-3">
-      <%= form.label :date_publication, class: "form-label" %>
-      <%= form.date_field :date_publication, class: "form-control" %>
-    </div>
-  
-    <div class="mb-3">
-      <%= form.label :image, class: "form-label" %>
-      <%= form.text_field :image, placeholder: "URL de l'image", class: "form-control" %>
-    </div>
-  
-    <%= form.submit class: "btn btn-primary" %>
   <% end %>
-  
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
+    .form-section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    h2 { margin-bottom: 10px; font-size: 1.2em; }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    input[type="text"], select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+    .radio-group { display: flex; gap: 10px; margin-top: 5px; }
+    .radio-group label { font-weight: normal; }
+    .btn { background-color: #007bff; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; }
+    .btn:hover { background-color: #0056b3; }
+    
+    .image-upload-container { margin-top: 15px; }
+    .image-preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .image-preview { position: relative; width: 150px; height: 150px; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
+    .image-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .image-preview .remove-image { position: absolute; top: 5px; right: 5px; background: rgba(255,255,255,0.8); border-radius: 50%; width: 25px; height: 25px; text-align: center; line-height: 25px; cursor: pointer; font-weight: bold; color: red; }
+    .file-upload-btn { display: inline-block; padding: 8px 16px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; margin-top: 5px; }
+    .file-upload-btn:hover { background: #e0e0e0; }
+  </style>
+
+  <div class="form-section">
+    <h2>Qu'annoncez-vous aujourd'hui ?</h2>
+    <p>Grâce à ces informations les acheteurs peuvent trouver votre annonce plus facilement.</p>
+    <%= form.label :category, "Catégorie *", class: "form-label" %>
+
+    <%= form.select :category, options_for_select([['Sélectionner une catégorie', ''], ['Informatique, Multimedia et Gadgets', 'informatique-multimedia'], ['Equipement pour Bébé et Enfant', 'equipement-bebe'], ['Maison et Jardin', 'maison-jardin'], ['Animalerie', 'animalerie'], ['Instruments de musique', 'instruments-musique'], ['Loisirs et Divertissements', 'loisirs-divertissements'], ['Habillement et Mode', 'habillement-mode'], ['Bien être et Sport', 'bien-etre-sport'], ['Matériels Professionnels', 'materiels-professionnels'], ['Stocks et Vente en gros', 'stocks-vente-gros'], ['Voitures', 'voitures'], ['Motos', 'motos'], ['Vélos', 'velos'], ['Pièces et Accessoires pour véhicules', 'pieces-accessoires'], ['Camions et Engins', 'camions-engins'], ['Bateaux', 'bateaux'], ['Autres Véhicules', 'autres-vehicules'], ['Appartements', 'appartements'], ['Maisons', 'maisons'], ['Villas-Riad', 'villas-riad'], ['Bureaux et Plateaux', 'bureaux-plateaux'], ['Magasins, Commerces et Locaux industriels', 'magasins-commerces'], ['Terrains, Fermes et Equipement Professionels', 'terrains-fermes'], ['Autre Immobilier', 'autre-immobilier'], ['Emploi', 'emploi'], ['Services', 'services'], ['Stages, Cours et Formations', 'stages-cours-formations'], ['Business et Affaires commerciales', 'business-affaires'], ['Évènements', 'evenements']]), {}, class: "form-control" %>
+
+    <%= form.label :transaction_type, "Type de transaction", class: "form-label" %>
+    <div class="radio-group">
+      <%= form.radio_button :transaction_type, 'sell', checked: true %> Vente
+      <%= form.radio_button :transaction_type, 'buy' %> Demande
+    </div>
+    
+
+    <%= form.label :titre, "Titre de l'annonce *", class: "form-label" %>
+    <%= form.text_field :titre, placeholder: "Entrer le titre", class: "form-control" %>
+
+    <%= form.label :description, "Description *", class: "form-label" %>
+    <%= form.text_area :description, placeholder: "Entrer la description", rows: 4, class: "form-control" %>
+  </div>
+
+  <div class="form-section">
+    <h2>Localisation & Date Publication</h2>
+    <%= form.label :localisation, "Localisation *", class: "form-label" %>
+    <%= form.text_field :localisation, placeholder: "Entrez votre localisation", class: "form-control" %>
+    
+    <%= form.label :date_publication, "Date publication *", class: "form-label" %>
+    <%= form.date_field :date_publication, class: "form-control" %>
+  </div>
+
+  <div class="form-section">
+    <h2>Vos coordonnées</h2>
+    <%= form.label :phone, "Numéro de téléphone *", class: "form-label" %>
+    <%= form.text_field :phone, placeholder: "Numéro de téléphone", value: "",  class: "form-control" %>
+    <div>
+      <%= form.check_box :phone_hidden %> Masquer le numéro dans l'annonce
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h2>Détails supplémentaires</h2>
+    
+    <div class="image-upload-container">
+      <%= form.label :images, "Images de l'annonce (Max 5 images, au moins 1 requise)", class: "form-label" %>
+      <%= form.file_field :images, multiple: true, accept: 'image/*', class: "form-control", id: "image-upload" %>
+      <small>Cliquez pour sélectionner ou glisser-déposer plusieurs images (jusqu'à 5)</small>
+    </div>
+    
+    <div class="image-preview-container" id="image-preview-container">
+      <% if annonce.images.attached? %>
+        <% annonce.images.each do |image| %>
+          <div class="image-preview">
+            <%= image_tag image, alt: "Preview" %>
+            <span class="remove-image" data-image-id="<%= image.id %>">×</span>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    
+    <%= form.label :prix, "Prix *", class: "form-label" %>
+    <%= form.text_field :prix, placeholder: "Entrer le prix", class: "form-control" %>
+  </div>
+
+  <%= form.submit "Continuer", class: "btn btn-primary" %>
+<% end %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const imageUpload = document.getElementById('image-upload');
+    const previewContainer = document.getElementById('image-preview-container');
+    
+    imageUpload.addEventListener('change', function() {
+      // Clear existing previews for new uploads
+      if (!this.multiple) {
+        previewContainer.innerHTML = '';
+      }
+      
+      // Limit to 5 images
+      if (this.files.length > 5) {
+        alert('Vous ne pouvez télécharger que 5 images maximum.');
+        this.value = '';
+        return;
+      }
+      
+      // Create previews for each selected file
+      for (let i = 0; i < this.files.length; i++) {
+        const file = this.files[i];
+        
+        if (!file.type.match('image.*')) {
+          continue;
+        }
+        
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const previewDiv = document.createElement('div');
+          previewDiv.className = 'image-preview';
+          
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.alt = 'Preview';
+          
+          const removeBtn = document.createElement('span');
+          removeBtn.className = 'remove-image';
+          removeBtn.innerHTML = '×';
+          removeBtn.addEventListener('click', function() {
+            previewDiv.remove();
+          });
+          
+          previewDiv.appendChild(img);
+          previewDiv.appendChild(removeBtn);
+          previewContainer.appendChild(previewDiv);
+        };
+        
+        reader.readAsDataURL(file);
+      }
+    });
+    
+    // Handle removal of existing images
+    document.querySelectorAll('.remove-image[data-image-id]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cette image?')) {
+          const imageId = this.getAttribute('data-image-id');
+          
+          // Create a hidden input to mark this image for deletion
+          const hiddenInput = document.createElement('input');
+          hiddenInput.type = 'hidden';
+          hiddenInput.name = 'annonce[remove_image_ids][]';
+          hiddenInput.value = imageId;
+          document.querySelector('form').appendChild(hiddenInput);
+          
+          // Remove the preview
+          this.closest('.image-preview').remove();
+        }
+      });
+    });
+  });
+</script>
