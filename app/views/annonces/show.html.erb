@@ -1,13 +1,180 @@
-<h1><%= @annonce.titre %></h1>
-
-<div class="mb-3">
-  <p><strong>Description:</strong> <%= @annonce.description %></p>
-  <p><strong>Prix:</strong> <%= @annonce.prix %> MAD</p>
-  <p><strong>Localisation:</strong> <%= @annonce.localisation %></p>
-  <p><strong>Date:</strong> <%= @annonce.date_publication.strftime("%d %B %Y") %></p>
-  <p><strong>Image:</strong></p>
-  <%#= image_tag @annonce.image, class: "img-fluid", alt: @annonce.titre if @annonce.image.present? %>
+<!-- Breadcrumb navigation styled like in the image -->
+<div class="breadcrumb-container py-2 border-bottom bg-light">
+  <div class="container">
+    <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0 small">
+        <li class="breadcrumb-item"><a href="<%= root_path %>" class="text-decoration-none text-secondary">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="<%= annonces_path %>" class="text-decoration-none text-secondary">Tout le Maroc</a></li>
+        <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-secondary"><%= @annonce.localisation %></a></li>
+        <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-secondary">Voitures</a></li>
+        <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-secondary">Voitures d'occasion</a></li>
+        <li class="breadcrumb-item active text-truncate" aria-current="page"><%= @annonce.titre %></li>
+      </ol>
+    </nav>
+  </div>
 </div>
 
-<%= link_to 'Modifier', edit_annonce_path(@annonce), class: "btn btn-warning" %>
-<%= link_to 'Retour', annonces_path, class: "btn btn-secondary" %>
+<!-- Add JavaScript to control header animation -->
+<% content_for :head do %>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    let lastScrollTop = 0;
+    const header = document.querySelector('.avito-header');
+    
+    window.addEventListener('scroll', function() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Show header effect when scrolling down more than 200px
+      if (scrollTop > 200) {
+        header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+      } else {
+        header.style.boxShadow = 'none';
+      }
+      
+      lastScrollTop = scrollTop;
+    });
+  });
+</script>
+<% end %>
+
+<!-- Main Content -->
+<div class="container mt-3">
+  <!-- Image Gallery -->
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="position-relative">
+        <!-- Carousel -->
+        <div id="annonceCarousel" class="carousel slide" data-bs-ride="false">
+          <!-- Image counter badge -->
+          <div class="position-absolute" style="top: 10px; left: 10px; z-index: 10;">
+            <span class="badge rounded-pill bg-white text-dark shadow-sm px-3 py-2">
+              <i class="bi bi-image"></i> <%= @annonce.images.count %> Images
+            </span>
+          </div>
+          
+          <!-- Share button -->
+          <div class="position-absolute" style="top: 10px; right: 10px; z-index: 10;">
+            <a href="#" class="btn btn-sm btn-light rounded-pill shadow-sm">
+              <i class="bi bi-share"></i> Partager
+            </a>
+          </div>
+          
+          <!-- Left and right buttons -->
+          <a class="position-absolute top-50 start-0 translate-middle-y ms-3 btn btn-light rounded-circle" href="#annonceCarousel" role="button" data-bs-slide="prev" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <i class="bi bi-chevron-left" style="font-size: 1.2rem;"></i>
+            <span class="visually-hidden">Previous</span>
+          </a>
+          
+          <a class="position-absolute top-50 end-0 translate-middle-y me-3 btn btn-light rounded-circle" href="#annonceCarousel" role="button" data-bs-slide="next" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+            <i class="bi bi-chevron-right" style="font-size: 1.2rem;"></i>
+            <span class="visually-hidden">Next</span>
+          </a>
+          
+          <!-- Carousel inner -->
+          <div class="carousel-inner rounded shadow-sm">
+            <% if @annonce.images.attached? %>
+              <% @annonce.images.each_with_index do |image, index| %>
+                <div class="carousel-item <%= index == 0 ? 'active' : '' %>" style="height: 400px; background-color: #000;">
+                  <%= image_tag image, class: "d-block w-100 h-100", style: "object-fit: contain;" %>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="carousel-item active" style="height: 400px; background-color: #eee;">
+                <div class="d-flex h-100 align-items-center justify-content-center">
+                  <i class="bi bi-image text-secondary" style="font-size: 5rem;"></i>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Details Column -->
+    <div class="col-lg-4">
+      <!-- Title -->
+      <h1 class="h3 mb-3"><%= @annonce.titre %></h1>
+      
+      <!-- Price -->
+      <div class="mb-3">
+        <span class="text-primary fw-bold" style="font-size: 2rem; color: #0d6efd !important;"><%= number_with_delimiter(@annonce.prix) %> DH</span>
+      </div>
+      
+      <!-- Location and time -->
+      <div class="mb-3 d-flex align-items-center">
+        <i class="bi bi-geo-alt text-secondary me-1"></i>
+        <span class="me-2"><%= @annonce.localisation %></span>
+        <span class="text-secondary small">Il y a <%= time_ago_in_words(@annonce.date_publication) %></span>
+      </div>
+      
+      <!-- Category Info -->
+      <div class="mb-4">
+        <div class="p-3 bg-light rounded d-flex align-items-center">
+          <div class="me-3 text-danger">
+            <i class="bi bi-car-front" style="font-size: 1.5rem;"></i>
+          </div>
+          <div>
+            <div class="small text-secondary">Catégorie</div>
+            <div><%= @annonce.category %>, à <%= @annonce.transaction_type == 'sell' ? 'vendre' : 'acheter' %></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Seller -->
+      <div class="mb-4">
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+              <i class="bi bi-person-circle" style="font-size: 1.8rem;"></i>
+            </div>
+          </div>
+          <div>
+            <div>auto prestige</div>
+            <div><a href="#" class="small text-decoration-none">Voir la boutique</a></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Warning message -->
+      <div class="alert border-start border-warning border-4 d-flex p-2 bg-light mb-4" style="border-left-width: 4px !important;">
+        <div class="me-2 text-warning">
+          <i class="bi bi-shield-exclamation"></i>
+        </div>
+        <div class="small">
+          Il ne faut jamais envoyer d'argent à l'avance au vendeur par virement ou agence de transfert.
+        </div>
+      </div>
+      
+      <!-- Contact buttons -->
+      <div class="d-flex gap-2 mb-2">
+        <a href="#" class="btn btn-outline-success d-flex align-items-center justify-content-center" style="width: 50px;">
+          <i class="bi bi-whatsapp fs-5"></i>
+        </a>
+        <button class="btn btn-primary flex-grow-1 d-flex align-items-center justify-content-center">
+          <i class="bi bi-telephone me-2"></i> Contacter le Vendeur
+        </button>
+      </div>
+      
+      <!-- Report abuse -->
+      <div class="text-center mb-4">
+        <a href="#" class="text-danger small text-decoration-none">
+          <i class="bi bi-exclamation-circle me-1"></i> SIGNALER UN ABUS
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Description section -->
+  <div class="row mt-4">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title border-bottom pb-2">Description</h5>
+          <div class="card-text">
+            <%= simple_format(@annonce.description) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

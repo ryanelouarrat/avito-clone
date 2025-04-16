@@ -1,0 +1,82 @@
+<!-- Avito Header -->
+<header class="avito-header border-bottom fixed-top">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center py-2">
+      <!-- Logo -->
+      <div class="logo-container">
+        <a href="<%= root_path %>" class="text-decoration-none">
+          <div class="d-flex align-items-center">
+            <div class="avito-logo me-2">
+            <%= image_tag('avito.png' , size:"110x40")%>
+
+            </div>
+          </div>
+        </a>
+      </div>
+      
+      <!-- Main Navigation -->
+      <nav class="main-nav d-none d-lg-flex">
+        <a href="#" class="px-3 text-decoration-none text-body py-2">Auto Neuf</a>
+        <a href="#" class="px-3 text-decoration-none text-body py-2">Immo Neuf</a>
+        <a href="#" class="px-3 text-decoration-none text-body py-2">Crédit Immobilier</a>
+        <a href="#" class="px-3 text-decoration-none text-body py-2">Crédit Conso</a>
+        <a href="#" class="px-3 text-decoration-none text-body py-2">Boutiques</a>
+        <a href="#" class="px-3 text-decoration-none text-body py-2">Magazine</a>
+      </nav>
+
+      <!-- User Area -->
+      <div class="user-area d-flex align-items-center">
+        <div class="dropdown me-3">
+          <button class="btn btn-outline-secondary rounded-pill dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle me-1"></i> Marwan El Ouarrat
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item" href="#">Mon profil</a></li>
+            <li><a class="dropdown-item" href="#">Mes annonces</a></li>
+            <li><a class="dropdown-item" href="#">Déconnexion</a></li>
+          </ul>
+        </div>
+        
+        <a href="<%= new_annonce_path %>" class="btn btn-danger rounded-pill publish-button">
+          <i class="bi bi-plus-circle me-1"></i> Publier une annonce
+        </a>
+        
+        <a href="#" class="btn btn-outline-secondary ms-2 rounded-circle lang-button">
+          العربية
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .publish-button {
+    background-color: #FF4757;
+    border-color: #FF4757;
+  }
+  
+  .publish-button:hover {
+    background-color: #ff2b3d;
+    border-color: #ff2b3d;
+  }
+  
+  .lang-button {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  /* Fixed header adjustments */
+  .avito-header {
+    background-color: white;
+    z-index: 1030;
+  }
+  
+  /* Add padding to body to prevent content from hiding under fixed header */
+  body {
+    padding-top: 64px;
+  }
+</style>

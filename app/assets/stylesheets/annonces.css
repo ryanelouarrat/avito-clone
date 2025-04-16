@@ -1,0 +1,100 @@
+/* Annonce show page styles */
+
+/* Breadcrumb styling */
+.breadcrumb {
+  font-size: 0.9rem;
+}
+
+.breadcrumb-item a {
+  text-decoration: none;
+  color: #555;
+}
+
+.breadcrumb-item.active {
+  color: #007bff;
+}
+
+/* Carousel styling */
+#annonceCarousel {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+#annonceCarousel .carousel-item {
+  height: 400px;
+  background-color: #f8f9fa;
+}
+
+#annonceCarousel .carousel-control-prev,
+#annonceCarousel .carousel-control-next {
+  background-color: rgba(0, 0, 0, 0.2);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0 15px;
+}
+
+/* Price styling */
+.text-primary {
+  color: #3861fb !important;
+}
+
+/* Category badge styling */
+.category-badge {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.category-badge i {
+  font-size: 1.5rem;
+  color: #ff4757;
+}
+
+/* Seller section */
+.seller-avatar {
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e9ecef;
+}
+
+/* Contact buttons */
+.btn-outline-success {
+  border-width: 2px;
+}
+
+.btn-primary {
+  background-color: #3861fb;
+  border-color: #3861fb;
+}
+
+/* Description card */
+.card {
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.card-title {
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  #annonceCarousel .carousel-item {
+    height: 300px;
+  }
+}

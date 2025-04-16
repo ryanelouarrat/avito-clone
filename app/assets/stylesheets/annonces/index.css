@@ -1,0 +1,186 @@
+/* Search Area Styles */
+.search-area {
+  background-color: white;
+  padding: 15px 0;
+  border-bottom: 1px solid #e9ecef;
+  position: sticky;
+  top: 64px; /* Adjust based on header height */
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.search-input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: none;
+}
+
+.category-select, .location-select {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  background-color: white;
+}
+
+.search-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: #4a89dc;
+}
+
+/* Category Section Styles */
+.category-section {
+  padding: 20px 0;
+  background-color: white;
+  margin-bottom: 20px;
+}
+
+.category-item {
+  text-align: center;
+  padding: 15px;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.category-item:hover {
+  transform: translateY(-5px);
+}
+
+.category-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+}
+
+/* Category Icon Colors */
+.immobilier-icon { 
+  color: #3f8ffc;
+  background-color: #ebf3ff;
+}
+
+.vehicules-icon { 
+  color: #ff5c62;
+  background-color: #ffebec;
+}
+
+.marketplace-icon { 
+  color: #28a745;
+  background-color: #e8f8ed;
+}
+
+.emplois-icon { 
+  color: #17a2b8;
+  background-color: #e3f4f6;
+}
+
+/* Card Styles */
+.card { 
+  transition: all 0.3s ease;
+  border: none;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card:hover { 
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.card-img-container {
+  height: 180px;
+  overflow: hidden;
+  position: relative;
+}
+
+.price-text {
+  color: #3aa4ff;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.premium-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ffd700;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 12px;
+  z-index: 2;
+}
+
+.time-badge {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+/* Section Styles */
+.latest-ads-section {
+  padding: 20px 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.section-title {
+  font-weight: 600;
+  font-size: 24px;
+  margin-bottom: 0;
+}
+
+/* Navigation Styles */
+.arrow-nav {
+  display: flex;
+  gap: 10px;
+}
+
+.arrow-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e1e1e1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.arrow-btn:hover {
+  background-color: #f8f9fa;
+}
+
+/* User Avatar Styles */
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.main-nav{
+    font-size: 12px;
+}
+.avito-header .container{
+min-width: 80%;
+}
