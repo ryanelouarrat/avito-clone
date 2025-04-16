@@ -34,7 +34,7 @@
     <p>Grâce à ces informations les acheteurs peuvent trouver votre annonce plus facilement.</p>
     <%= form.label :category, "Catégorie *", class: "form-label" %>
 
-    <%= form.select :category, options_for_select([['Sélectionner une catégorie', ''], ['Informatique, Multimedia et Gadgets', 'informatique-multimedia'], ['Equipement pour Bébé et Enfant', 'equipement-bebe'], ['Maison et Jardin', 'maison-jardin'], ['Animalerie', 'animalerie'], ['Instruments de musique', 'instruments-musique'], ['Loisirs et Divertissements', 'loisirs-divertissements'], ['Habillement et Mode', 'habillement-mode'], ['Bien être et Sport', 'bien-etre-sport'], ['Matériels Professionnels', 'materiels-professionnels'], ['Stocks et Vente en gros', 'stocks-vente-gros'], ['Voitures', 'voitures'], ['Motos', 'motos'], ['Vélos', 'velos'], ['Pièces et Accessoires pour véhicules', 'pieces-accessoires'], ['Camions et Engins', 'camions-engins'], ['Bateaux', 'bateaux'], ['Autres Véhicules', 'autres-vehicules'], ['Appartements', 'appartements'], ['Maisons', 'maisons'], ['Villas-Riad', 'villas-riad'], ['Bureaux et Plateaux', 'bureaux-plateaux'], ['Magasins, Commerces et Locaux industriels', 'magasins-commerces'], ['Terrains, Fermes et Equipement Professionels', 'terrains-fermes'], ['Autre Immobilier', 'autre-immobilier'], ['Emploi', 'emploi'], ['Services', 'services'], ['Stages, Cours et Formations', 'stages-cours-formations'], ['Business et Affaires commerciales', 'business-affaires'], ['Évènements', 'evenements']]), {}, class: "form-control" %>
+    <%= form.select :category, options_for_select([['Sélectionner une catégorie', ''], ['Informatique, Multimedia et Gadgets', 'informatique-multimedia'], ['Equipement pour Bébé et Enfant', 'equipement-bebe'], ['Maison et Jardin', 'maison-jardin'], ['Animalerie', 'animalerie'], ['Instruments de musique', 'instruments-musique'], ['Loisirs et Divertissements', 'loisirs-divertissements'], ['Habillement et Mode', 'habillement-mode'], ['Bien être et Sport', 'bien-etre-sport'], ['Matériels Professionnels', 'materiels-professionnels'], ['Stocks et Vente en gros', 'stocks-vente-gros'], ['Voitures', 'voitures'], ['Motos', 'motos'], ['Vélos', 'velos'], ['Pièces et Accessoires pour véhicules', 'pieces-accessoires'], ['Camions et Engins', 'camions-engins'], ['Bateaux', 'bateaux'], ['Autres Véhicules', 'autres-vehicules'], ['Appartements', 'appartements'], ['Maisons', 'maisons'], ['Villas-Riad', 'villas-riad'], ['Bureaux et Plateaux', 'bureaux-plateaux'], ['Magasins, Commerces et Locaux industriels', 'magasins-commerces'], ['Terrains, Fermes et Equipement Professionels', 'terrains-fermes'], ['Autre Immobilier', 'autre-immobilier'], ['Emploi', 'emploi'], ['Services', 'services'], ['Stages, Cours et Formations', 'stages-cours-formations'], ['Business et Affaires commerciales', 'business-affaires'], ['Évènements', 'evenements']], annonce.category), {}, class: "form-control" %>
 
     <%= form.label :transaction_type, "Type de transaction", class: "form-label" %>
     <div class="radio-group">
@@ -71,11 +71,39 @@
   <div class="form-section">
     <h2>Détails supplémentaires</h2>
     
+    <% current_image_count = annonce.images.attached? ? annonce.images.count : 0 %>
     <div class="image-upload-container">
-      <%= form.label :images, "Images de l'annonce (Max 5 images, au moins 1 requise)", class: "form-label" %>
+      <%= form.label :images, "Images de l'annonce (#{current_image_count}/5 images, au moins 1 requise)", class: "form-label" %>
       <%= form.file_field :images, multiple: true, accept: 'image/*', class: "form-control", id: "image-upload" %>
-      <small>Cliquez pour sélectionner ou glisser-déposer plusieurs images (jusqu'à 5)</small>
+      <small>Cliquez pour sélectionner ou glisser-déposer plusieurs images (jusqu'à <%= 5 - current_image_count %> de plus)</small>
     </div>
+    
+    <% if annonce.images.attached? && annonce.images.count > 0 %>
+      <div class="image-carousel-container mt-3 mb-3">
+        <div id="imageCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+            <% annonce.images.each_with_index do |image, index| %>
+              <div class="carousel-item <%= 'active' if index == 0 %>">
+                <%= image_tag image, class: "d-block w-100", style: "height: 300px; object-fit: contain;" %>
+                <div class="carousel-caption">
+                  <button type="button" class="btn btn-danger remove-image" data-image-id="<%= image.id %>">
+                    Supprimer cette image
+                  </button>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <a class="carousel-control-prev" href="#imageCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Précédent</span>
+          </a>
+          <a class="carousel-control-next" href="#imageCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Suivant</span>
+          </a>
+        </div>
+      </div>
+    <% end %>
     
     <div class="image-preview-container" id="image-preview-container">
       <% if annonce.images.attached? %>
@@ -100,15 +128,13 @@
     const imageUpload = document.getElementById('image-upload');
     const previewContainer = document.getElementById('image-preview-container');
     
+    // Track the number of existing images
+    let existingImageCount = <%= annonce.images.attached? ? annonce.images.count : 0 %>;
+    
     imageUpload.addEventListener('change', function() {
-      // Clear existing previews for new uploads
-      if (!this.multiple) {
-        previewContainer.innerHTML = '';
-      }
-      
-      // Limit to 5 images
-      if (this.files.length > 5) {
-        alert('Vous ne pouvez télécharger que 5 images maximum.');
+      // Check if total images would exceed the limit
+      if (this.files.length + existingImageCount > 5) {
+        alert(`Vous avez déjà ${existingImageCount} image(s). Vous ne pouvez ajouter que ${5 - existingImageCount} image(s) de plus.`);
         this.value = '';
         return;
       }
@@ -147,21 +173,65 @@
       }
     });
     
-    // Handle removal of existing images
+    // Function to handle image deletion
+    function handleImageDeletion(imageId) {
+      if (confirm('Êtes-vous sûr de vouloir supprimer cette image?')) {
+        // Create a hidden input to mark this image for deletion
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'annonce[remove_image_ids][]';
+        hiddenInput.value = imageId;
+        document.querySelector('form').appendChild(hiddenInput);
+        
+        // Remove all preview elements with this image ID
+        document.querySelectorAll(`.image-preview .remove-image[data-image-id="${imageId}"]`).forEach(btn => {
+          const preview = btn.closest('.image-preview');
+          if (preview) preview.remove();
+        });
+        
+        // Remove carousel item with this image ID
+        document.querySelectorAll(`.carousel-item .remove-image[data-image-id="${imageId}"]`).forEach(btn => {
+          const carouselItem = btn.closest('.carousel-item');
+          if (carouselItem) {
+            // If this is the active item, make another one active
+            const isActive = carouselItem.classList.contains('active');
+            const carousel = carouselItem.closest('.carousel-inner');
+            const next = carouselItem.nextElementSibling || carouselItem.previousElementSibling;
+            
+            carouselItem.remove();
+            
+            if (isActive && next && carousel) {
+              next.classList.add('active');
+            }
+            
+            // If no more items in carousel, hide it
+            if (carousel && !carousel.querySelector('.carousel-item')) {
+              const carouselContainer = document.querySelector('.image-carousel-container');
+              if (carouselContainer) carouselContainer.remove();
+            }
+          }
+        });
+        
+        // Update the count of existing images
+        existingImageCount--;
+        const imageLabel = document.querySelector('label[for="annonce_images"]');
+        if (imageLabel) {
+          imageLabel.textContent = `Images de l'annonce (${existingImageCount}/5 images, au moins 1 requise)`;
+        }
+        
+        const uploadHelp = document.querySelector('.image-upload-container small');
+        if (uploadHelp) {
+          uploadHelp.textContent = `Cliquez pour sélectionner ou glisser-déposer plusieurs images (jusqu'à ${5 - existingImageCount} de plus)`;
+        }
+      }
+    }
+    
+    // Attach click handlers to all remove image buttons
     document.querySelectorAll('.remove-image[data-image-id]').forEach(function(btn) {
       btn.addEventListener('click', function() {
-        if (confirm('Êtes-vous sûr de vouloir supprimer cette image?')) {
-          const imageId = this.getAttribute('data-image-id');
-          
-          // Create a hidden input to mark this image for deletion
-          const hiddenInput = document.createElement('input');
-          hiddenInput.type = 'hidden';
-          hiddenInput.name = 'annonce[remove_image_ids][]';
-          hiddenInput.value = imageId;
-          document.querySelector('form').appendChild(hiddenInput);
-          
-          // Remove the preview
-          this.closest('.image-preview').remove();
+        const imageId = this.getAttribute('data-image-id');
+        if (imageId) {
+          handleImageDeletion(imageId);
         }
       });
     });

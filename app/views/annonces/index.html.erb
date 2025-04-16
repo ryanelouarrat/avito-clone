@@ -1,24 +1,327 @@
-<div id="avito-page" dir="ltr" translate="no" class="notranslate">
-  <%# Optional: add a header replicating Avito's UI here %>
-  <h1 class="mb-4">Toutes les Annonces</h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { 
+      padding-top: 60px; 
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+    .navbar-brand-logo {
+      width: 100px;
+    }
+    .navbar-brand-logo img {
+      max-width: 100%;
+    }
+    .search-area {
+      background-color: white;
+      padding: 15px 0;
+      border-bottom: 1px solid #e9ecef;
+    }
+    .search-input {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: none;
+    }
+    .category-select {
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      background-color: white;
+    }
+    .location-select {
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      background-color: white;
+    }
+    .search-btn {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      background-color: #4a89dc;
+    }
+    .category-section {
+      padding: 20px 0;
+      background-color: white;
+      margin-bottom: 20px;
+    }
+    .category-item {
+      text-align: center;
+      padding: 15px;
+      transition: transform 0.2s;
+    }
+    .category-item:hover {
+      transform: translateY(-5px);
+    }
+    .category-icon {
+      font-size: 24px;
+      margin-bottom: 10px;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+    }
+    .immobilier-icon { 
+      color: #3f8ffc;
+      background-color: #ebf3ff;
+    }
+    .vehicules-icon { 
+      color: #ff5c62;
+      background-color: #ffebec;
+    }
+    .marketplace-icon { 
+      color: #28a745;
+      background-color: #e8f8ed;
+    }
+    .emplois-icon { 
+      color: #17a2b8;
+      background-color: #e3f4f6;
+    }
+    .card { 
+      transition: all 0.3s ease;
+      border: none;
+      margin-bottom: 20px;
+    }
+    .card:hover { 
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .card-img-container {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .price-text {
+      color: #3aa4ff;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    .publish-btn {
+      background-color: #ff5c62;
+      border-color: #ff5c62;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-weight: 500;
+    }
+    .publish-btn:hover {
+      background-color: #ff4248;
+      border-color: #ff4248;
+    }
+    .language-btn {
+      border-radius: 30px;
+      border: 1px solid #ddd;
+      color: #333;
+      background-color: white;
+      padding: 6px 15px;
+    }
+    .user-dropdown {
+      border-radius: 30px;
+      border: 1px solid #ddd;
+      color: #333;
+      background-color: white;
+      padding: 6px 15px;
+      margin-right: 10px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
 
-  <%= link_to 'Créer une annonce', new_annonce_path, class: "btn btn-success mb-4" %>
-
-  <% @annonces.each do |annonce| %>
-    <div class="card mb-3">
-      <div class="card-body">
-        <h5 class="card-title"><%= annonce.titre %></h5>
-        <p class="card-text"><%= annonce.description.truncate(100) %></p>
-        <p><strong>Prix:</strong> <%= annonce.prix %> MAD</p>
-        <p><strong>Localisation:</strong> <%= annonce.localisation %></p>
-        <%= link_to 'Voir', annonce_path(annonce), class: "btn btn-primary btn-sm" %>
-        <%= link_to 'Modifier', edit_annonce_path(annonce), class: "btn btn-warning btn-sm" %>
-        <%= button_to 'Supprimer', annonce_path(annonce),
-              method: :delete,
-              data: { turbo_confirm: 'Supprimer cette annonce ?' },
-              class: "btn btn-danger btn-sm",
-              form: { class: "d-inline" } %>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+  <div class="container">
+    <!-- Logo -->
+    <a class="navbar-brand" href="#">
+      <div class="navbar-brand-logo">
+        <img src="https://www.avito.ma/phoenix-assets/imgs/layout/avito-logo.svg" alt="Avito Logo" class="img-fluid">
+      </div>
+    </a>
+    
+    <!-- Toggle button for mobile -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <!-- Navbar links -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="#">Auto Neuf</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Immo Neuf</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Crédit Immobilier</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Crédit Conso</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Boutiques</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Magazine</a></li>
+      </ul>
+      
+      <!-- Auth buttons -->
+      <div class="d-flex align-items-center">
+        <div class="dropdown mr-2">
+          <button class="btn user-dropdown dropdown-toggle" type="button" id="userDropdown" data-toggle="dropdown">
+            <i class="far fa-user-circle mr-2"></i>
+            Marwan El Ouarrat
+          </button>
+          <div class="dropdown-menu" aria-labelledby="userDropdown">
+            <a class="dropdown-item" href="#">Mon profil</a>
+            <a class="dropdown-item" href="#">Mes annonces</a>
+            <a class="dropdown-item" href="#">Déconnexion</a>
+          </div>
+        </div>
+        
+        <a href="<%= new_annonce_path %>" class="btn btn-danger publish-btn mr-2">
+          <i class="fas fa-edit mr-1"></i> Publier une annonce
+        </a>
+        
+        <button class="btn language-btn">العربية</button>
       </div>
     </div>
-  <% end %>
+  </div>
+</nav>
+
+<!-- Search area -->
+<div class="search-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <form class="d-flex">
+          <div class="input-group flex-grow-1">
+            <input type="text" class="form-control search-input" placeholder="Que recherchez-vous ?">
+            
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary dropdown-toggle category-select" type="button" data-toggle="dropdown">
+                <i class="fas fa-th-large mr-2"></i> Toutes les catégories
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">Immobilier</a>
+                <a class="dropdown-item" href="#">Véhicules</a>
+                <a class="dropdown-item" href="#">Marketplace</a>
+                <a class="dropdown-item" href="#">Emplois et Services</a>
+              </div>
+            </div>
+            
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary dropdown-toggle location-select" type="button" data-toggle="dropdown">
+                <i class="fas fa-map-marker-alt mr-2"></i> Choisir ville - secteur
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#">Casablanca</a>
+                <a class="dropdown-item" href="#">Rabat</a>
+                <a class="dropdown-item" href="#">Marrakech</a>
+                <a class="dropdown-item" href="#">Tanger</a>
+              </div>
+            </div>
+            
+            <div class="input-group-append">
+              <button class="btn btn-primary search-btn" type="submit">
+                <i class="fas fa-search"></i> Rechercher
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Category section -->
+<div class="category-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="category-item">
+          <div class="category-icon immobilier-icon">
+            <i class="fas fa-home"></i>
+          </div>
+          <h6>Immobilier</h6>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="category-item">
+          <div class="category-icon vehicules-icon">
+            <i class="fas fa-car"></i>
+          </div>
+          <h6>Véhicules</h6>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="category-item">
+          <div class="category-icon marketplace-icon">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <h6>Marketplace</h6>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="category-item">
+          <div class="category-icon emplois-icon">
+            <i class="fas fa-briefcase"></i>
+          </div>
+          <h6>Emplois et Services</h6>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0 font-weight-bold">Toutes les Annonces</h3>
+  </div>
+  
+  <div class="row">
+    <% @annonces.each do |annonce| %>
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+          <!-- Image -->
+          <div class="card-img-container">
+            <% if annonce.images.attached? && annonce.images.first.present? %>
+              <%= image_tag annonce.images.first, class: "w-100 h-100 object-fit-cover" %>
+            <% else %>
+              <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
+                <span>Pas d'image</span>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="card-body">
+            <!-- Location -->
+            <p class="text-muted small mb-2">
+              <i class="fas fa-map-marker-alt"></i> <%= annonce.localisation %>
+            </p>
+            
+            <!-- Title -->
+            <h5 class="card-title font-weight-bold"><%= annonce.titre %></h5>
+            
+            <!-- Description - shortened -->
+            <p class="card-text text-muted small"><%= annonce.description.truncate(80) %></p>
+            
+            <!-- Price -->
+            <p class="price-text mt-auto mb-2"><%= annonce.prix %> MAD</p>
+            
+            <!-- Buttons -->
+            <div class="btn-group btn-group-sm w-100">
+              <%= link_to 'Voir', annonce_path(annonce), class: "btn btn-outline-primary" %>
+              <%= link_to 'Modifier', edit_annonce_path(annonce), class: "btn btn-outline-warning" %>
+              <%= button_to 'Supprimer', annonce_path(annonce),
+                    method: :delete,
+                    data: { turbo_confirm: 'Supprimer cette annonce ?' },
+                    class: "btn btn-outline-danger",
+                    form: { class: "d-inline" } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>
