@@ -1,5 +1,116 @@
-<h1>Modifier l'Annonce</h1>
+<%= stylesheet_link_tag "fonts", "data-turbo-track": "reload" %>
 
-<%= render 'form', annonce: @annonce %>
+<div class="container-fluid px-0">
+  <!-- Top navigation with stepper -->
+  <div class="d-flex align-items-center justify-content-around shadow-sm bg-white py-3 px-4 mb-4">
+    <div class="d-flex align-items-center">
+      <div class="bg-primary rounded-circle text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; min-width: 40px;">
+        <i class="bi bi-pencil-square"></i>
+      </div>
+      <div class="ms-3">
+        <h1 class="h5 mb-0 fw-bold">Modifier l'Annonce</h1>
+        <p class="text-muted mb-0 small">Mettez à jour les informations de votre annonce</p>
+      </div>
+    </div>
+    <div>
+      <a href="<%= annonce_path(@annonce) %>" class="text-dark text-decoration-none fw-bold">Retour</a>
+    </div>
+  </div>
 
-<%= link_to 'Retour', annonce_path(@annonce), class: "btn btn-secondary mt-3" %>
+  <div class="row gx-4 mx-2">
+  <div class="col-1"></div>
+
+    <div class="col-md-7">
+      <%= render 'form', annonce: @annonce %>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <div class="d-flex align-items-center w-100 text-center mb-3">
+            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; min-width: 30px;">
+              <i class="bi bi-lightbulb"></i>
+            </div>
+            <h6 class="card-title mb-0 ms-2 text-center fw-bold">Comment définir mon annonce</h5>
+          </div>
+          
+          <div class="alert alert-primary  border-0 rounded-3" style="background-color: #eaf0ff; color:#2455cc;" >
+            <div class="d-flex">
+              <div class="me-2 text-primary">
+                <i class="bi bi-info-circle"></i>
+              </div>
+              <div class="small">
+                <p class="mb-2">Choisir la bonne catégorie lors de l'insertion d'une annonce peut aider à augmenter la visibilité, la pertinence et l'efficacité, et éviter tout potentiel refus.</p>
+                
+                <p class="mb-2">Il est important d'inclure une adresse postale claire et précise pour que les clients potentiels puissent facilement vous trouver.</p>
+                
+                <p class="mb-2">Assurez-vous d'inclure un numéro de téléphone auquel les clients potentiels peuvent vous joindre.</p>
+                
+                <p class="mb-0">Gardez vos coordonnées à jour.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mt-3 text-center">
+            <a href="#" class="text-primary text-decoration-none small">Termes et conditions d'annonce</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-1"></div>
+
+  </div>
+</div>
+
+<!-- Sticky Continuer button -->
+<div class="sticky-continuer-bar">
+  <div class="container-fluid">
+    <div class="sticky-continuer-content mr-3">
+      <button type="button" id="stickySubmitBtn" class="btn mr-3 btn-primary btn-lg">ENREGISTRER</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sticky-continuer-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 15px 0;
+  }
+
+  .sticky-continuer-content {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 30px;
+  }
+
+  @media (max-width: 768px) {
+    .sticky-continuer-content {
+      justify-content: center;
+      padding-right: 0;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Sticky submit button functionality
+    const stickySubmitBtn = document.getElementById('stickySubmitBtn');
+    const formSubmitBtn = document.querySelector('form input[type="submit"]');
+    
+    if (stickySubmitBtn && formSubmitBtn) {
+      stickySubmitBtn.addEventListener('click', function() {
+        formSubmitBtn.click();
+      });
+    }
+
+    // Add padding to the bottom of the page to prevent content from being hidden behind the sticky bar
+    const stickyBarHeight = document.querySelector('.sticky-continuer-bar').offsetHeight;
+    document.body.style.paddingBottom = (stickyBarHeight + 20) + 'px';
+  });
+</script>

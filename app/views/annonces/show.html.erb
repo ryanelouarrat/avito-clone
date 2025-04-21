@@ -33,6 +33,22 @@
       
       lastScrollTop = scrollTop;
     });
+
+    // Handle gallery image selection
+    document.querySelectorAll('.gallery-thumbnail').forEach(thumb => {
+      thumb.addEventListener('click', function() {
+        const mainImg = document.getElementById('mainImage');
+        mainImg.src = this.getAttribute('data-full-img');
+        
+        // Remove active class from all thumbnails
+        document.querySelectorAll('.gallery-thumbnail').forEach(t => {
+          t.classList.remove('active');
+        });
+        
+        // Add active class to clicked thumbnail
+        this.classList.add('active');
+      });
+    });
   });
 </script>
 <% end %>
@@ -43,49 +59,47 @@
   <div class="row">
     <div class="col-lg-8">
       <div class="position-relative">
-        <!-- Carousel -->
-        <div id="annonceCarousel" class="carousel slide" data-bs-ride="false">
-          <!-- Image counter badge -->
-          <div class="position-absolute" style="top: 10px; left: 10px; z-index: 10;">
-            <span class="badge rounded-pill bg-white text-dark shadow-sm px-3 py-2">
-              <i class="bi bi-image"></i> <%= @annonce.images.count %> Images
-            </span>
-          </div>
-          
-          <!-- Share button -->
-          <div class="position-absolute" style="top: 10px; right: 10px; z-index: 10;">
-            <a href="#" class="btn btn-sm btn-light rounded-pill shadow-sm">
-              <i class="bi bi-share"></i> Partager
-            </a>
-          </div>
-          
-          <!-- Left and right buttons -->
-          <a class="position-absolute top-50 start-0 translate-middle-y ms-3 btn btn-light rounded-circle" href="#annonceCarousel" role="button" data-bs-slide="prev" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-            <i class="bi bi-chevron-left" style="font-size: 1.2rem;"></i>
-            <span class="visually-hidden">Previous</span>
-          </a>
-          
-          <a class="position-absolute top-50 end-0 translate-middle-y me-3 btn btn-light rounded-circle" href="#annonceCarousel" role="button" data-bs-slide="next" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-            <i class="bi bi-chevron-right" style="font-size: 1.2rem;"></i>
-            <span class="visually-hidden">Next</span>
-          </a>
-          
-          <!-- Carousel inner -->
-          <div class="carousel-inner rounded shadow-sm">
-            <% if @annonce.images.attached? %>
-              <% @annonce.images.each_with_index do |image, index| %>
-                <div class="carousel-item <%= index == 0 ? 'active' : '' %>" style="height: 400px; background-color: #000;">
-                  <%= image_tag image, class: "d-block w-100 h-100", style: "object-fit: contain;" %>
-                </div>
-              <% end %>
+        <!-- Modern Image Gallery -->
+        <div class="image-gallery shadow-sm rounded">
+          <!-- Main large image display -->
+          <div class="main-image-container position-relative bg-light" style="height: 400px; overflow: hidden;">
+            <% if @annonce.images.attached? && @annonce.images.first.present? %>
+              <%= image_tag @annonce.images.first, id: "mainImage", class: "w-100 h-100", style: "object-fit: contain;" %>
+              
+              <!-- Image counter badge -->
+              <div class="position-absolute" style="top: 10px; left: 10px; z-index: 10;">
+                <span class="badge rounded-pill bg-white text-dark shadow-sm px-3 py-2">
+                  <i class="bi bi-image"></i> <%= @annonce.images.count %> Images
+                </span>
+              </div>
+              
+              <!-- Share button -->
+              <div class="position-absolute" style="top: 10px; right: 10px; z-index: 10;">
+                <a href="#" class="btn btn-sm btn-light rounded-pill shadow-sm">
+                  <i class="bi bi-share"></i> Partager
+                </a>
+              </div>
             <% else %>
-              <div class="carousel-item active" style="height: 400px; background-color: #eee;">
-                <div class="d-flex h-100 align-items-center justify-content-center">
-                  <i class="bi bi-image text-secondary" style="font-size: 5rem;"></i>
-                </div>
+              <div class="d-flex h-100 align-items-center justify-content-center">
+                <i class="bi bi-image text-secondary" style="font-size: 5rem;"></i>
               </div>
             <% end %>
           </div>
+          
+          <!-- Thumbnails row -->
+          <% if @annonce.images.attached? && @annonce.images.count > 1 %>
+            <div class="gallery-thumbnails d-flex overflow-auto p-2 bg-white" style="gap: 8px;">
+              <% @annonce.images.each_with_index do |image, index| %>
+                <div class="gallery-thumbnail-container" style="flex: 0 0 80px;">
+                  <%= image_tag image, 
+                      class: "gallery-thumbnail rounded #{index == 0 ? 'active' : ''}",
+                      style: "width: 80px; height: 80px; object-fit: cover; cursor: pointer; border: 2px solid #{index == 0 ? '#0d6efd' : 'transparent'};",
+                      data: { full_img: url_for(image) } 
+                  %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
@@ -129,8 +143,8 @@
             </div>
           </div>
           <div>
-            <div>auto prestige</div>
-            <div><a href="#" class="small text-decoration-none">Voir la boutique</a></div>
+            <div><%= @annonce.utilisateur.nom %></div>
+            <div><a href="<%= utilisateur_path(@annonce.utilisateur) %>" class="small text-decoration-none">Voir la boutique</a></div>
           </div>
         </div>
       </div>
@@ -178,3 +192,23 @@
     </div>
   </div>
 </div>
+
+<style>
+  .gallery-thumbnail.active {
+    border-color: #0d6efd !important;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+  }
+  
+  .gallery-thumbnails::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .gallery-thumbnails::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 10px;
+  }
+  
+  .gallery-thumbnails::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0.05);
+  }
+</style>

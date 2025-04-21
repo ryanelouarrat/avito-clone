@@ -1,0 +1,125 @@
+<!-- app/views/utilisateurs/show.html.erb -->
+<div class="container mt-5 pt-5">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card shadow">
+        <div class="card-body text-center">
+          <!-- Profile picture -->
+          <div class="mb-3">
+            <% if @utilisateur.profile_picture.attached? %>
+              <%= image_tag @utilisateur.profile_picture, class: "rounded-circle profile-img", style: "width: 150px; height: 150px; object-fit: cover;" %>
+            <% else %>
+              <i class="bi bi-person-circle" style="font-size: 5rem;"></i>
+            <% end %>
+          </div>
+          <h4 class="card-title"><%= @utilisateur.nom %></h4>
+          <p class="text-muted">Membre depuis <%= @utilisateur.created_at.strftime("%B %Y") %></p>
+          
+          <% if current_utilisateur == @utilisateur %>
+            <div class="mt-3">
+              <%= link_to "Modifier mon profil", edit_utilisateur_path(@utilisateur), class: "btn btn-outline-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-8">
+      <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Informations personnelles</h5>
+        </div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-md-3 fw-bold">Nom:</div>
+            <div class="col-md-9"><%= @utilisateur.nom %></div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-md-3 fw-bold">Email:</div>
+            <div class="col-md-9"><%= @utilisateur.email %></div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-md-3 fw-bold">Ville:</div>
+            <div class="col-md-9"><%= @utilisateur.ville || "Non spécifiée" %></div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-md-3 fw-bold">Téléphone:</div>
+            <div class="col-md-9"><%= @utilisateur.telephone || "Non spécifié" %></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Mes annonces</h5>
+        </div>
+        <div class="card-body">
+          <% annonces = Annonce.where(utilisateur_id: @utilisateur.id).limit(6) %>
+          <% if annonces.any? %>
+            <div class="row annonces-gallery">
+              <% annonces.each do |annonce| %>
+                <div class="col-md-4 col-sm-6 mb-3">
+                  <%= link_to annonce_path(annonce), class: "text-decoration-none" do %>
+                    <div class="card h-100 shadow-hover">
+                      <div class="card-img-top" style="height: 150px; overflow: hidden;">
+                        <% if annonce.images.attached? && annonce.images.first.present? %>
+                          <%= image_tag annonce.images.first, class: "w-100 h-100 object-fit-cover" %>
+                        <% else %>
+                          <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
+                            <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
+                          </div>
+                        <% end %>
+                      </div>
+                      <div class="card-body p-2">
+                        <h6 class="card-title text-truncate mb-1"><%= annonce.titre %></h6>
+                        <p class="card-text text-primary fw-bold mb-1"><%= annonce.prix %> MAD</p>
+                        <small class="text-muted"><%= annonce.created_at.strftime("%d/%m/%Y") %></small>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            
+            <% if Annonce.where(utilisateur_id: @utilisateur.id).count > 6 %>
+              <div class="text-center mt-3">
+                <%= link_to "Voir toutes mes annonces", annonces_path(utilisateur_id: @utilisateur.id), class: "btn btn-outline-primary" %>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-center my-3">
+              <% if current_utilisateur == @utilisateur %>
+                Vous n'avez pas encore publié d'annonces.
+              <% else %>
+                Cet utilisateur n'a pas encore publié d'annonces.
+              <% end %>
+            </p>
+          <% end %>
+          
+          <% if current_utilisateur == @utilisateur %>
+            <div class="d-grid gap-2 mt-3">
+              <%= link_to "Publier une annonce", new_annonce_path, class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .shadow-hover {
+    transition: all 0.3s ease;
+  }
+  .shadow-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+  }
+  .object-fit-cover {
+    object-fit: cover;
+  }
+  .profile-img {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 3px solid #fff;
+  }
+</style>

@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resources :annonces
 
   # For user sign-up / sign-in
-  resources :utilisateurs, only: [:new, :create, :show] 
+  resources :utilisateurs, only: [:new, :create, :show, :edit, :update] 
   # or resources :utilisateurs  # if you want full CRUD
 
   # Session routes for login/logout

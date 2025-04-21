@@ -3,12 +3,21 @@ class Annonce < ApplicationRecord
   has_many_attached :images
   validates :titre, :description, :prix, :localisation, :date_publication, :category, :transaction_type, presence: true
   validates :transaction_type, inclusion: { in: %w(sell buy), message: "%{value} is not a valid transaction type" }
-  validate :validate_images
+  
+  # Only validate images for new records
+  validate :validate_images, on: :create
   
   private
   
   def validate_images
-    errors.add(:images, "au moins une image est requise") if images.blank?
-    errors.add(:images, "maximum 5 images autorisées") if images.length > 5
+    # Require at least one image for new records
+    if new_record? && images.blank?
+      errors.add(:images, "au moins une image est requise")
+    end
+    
+    # Always check maximum images
+    if images.length > 5
+      errors.add(:images, "maximum 5 images autorisées") 
+    end
   end
 end

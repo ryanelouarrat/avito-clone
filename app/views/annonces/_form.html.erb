@@ -9,24 +9,280 @@
       </ul>
     </div>
   <% end %>
+  
   <style>
-    body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
-    .form-section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    h2 { margin-bottom: 10px; font-size: 1.2em; }
-    label { display: block; margin-top: 10px; font-weight: bold; }
-    input[type="text"], select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
-    .radio-group { display: flex; gap: 10px; margin-top: 5px; }
-    .radio-group label { font-weight: normal; }
-    .btn { background-color: #007bff; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; }
-    .btn:hover { background-color: #0056b3; }
+    /* Reset and common styles */
+    body { 
+      font-family: Arial, sans-serif; 
+      background: #f5f5f5; 
+      padding: 0; 
+      margin: 0; 
+    }
     
-    .image-upload-container { margin-top: 15px; }
-    .image-preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-    .image-preview { position: relative; width: 150px; height: 150px; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
-    .image-preview img { width: 100%; height: 100%; object-fit: cover; }
-    .image-preview .remove-image { position: absolute; top: 5px; right: 5px; background: rgba(255,255,255,0.8); border-radius: 50%; width: 25px; height: 25px; text-align: center; line-height: 25px; cursor: pointer; font-weight: bold; color: red; }
-    .file-upload-btn { display: inline-block; padding: 8px 16px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; margin-top: 5px; }
-    .file-upload-btn:hover { background: #e0e0e0; }
+    /* Panel styles - side panels for categories and cities */
+    .side-panel {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 400px;
+      height: 100vh;
+      background-color: white;
+      z-index: 2000;
+      transition: right 0.3s ease-in-out;
+      overflow-y: auto;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .side-panel.show {
+      right: 0;
+    }
+    
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .panel-body {
+      padding: 20px;
+    }
+    
+    .panel-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1999;
+      display: none;
+    }
+    
+    .panel-overlay.show {
+      display: block;
+    }
+    
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #333;
+    }
+    
+    /* Form section styling */
+    .form-section { 
+      background: white; 
+      padding: 24px; 
+      border-radius: 8px; 
+      margin-bottom: 20px; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12); 
+    }
+    
+    .form-section h2 { 
+      margin-top: 0; 
+      margin-bottom: 10px; 
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .form-section p {
+      margin-top: 0;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    
+    /* Form controls */
+    .form-label { 
+      display: block; 
+      margin-top: 10px; 
+      margin-bottom: 6px;
+      font-weight: 500;
+      font-size: 14px;
+      color: #333;
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background-color: white;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: #4285f4;
+      box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.1);
+    }
+    
+    .form-select {
+      appearance: none;
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background-color: white;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 12px;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    
+    /* Radio button styling */
+    .radio-group {
+      display: flex;
+      gap: 16px;
+      margin-top: 5px;
+      margin-bottom: 16px;
+    }
+    
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      font-weight: normal;
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+    }
+    
+    .radio-group input[type="radio"] {
+      margin-right: 6px;
+    }
+    
+    /* Button styling */
+    .btn {
+      padding: 12px 24px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .btn-primary {
+      background-color: #4285f4;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #3367d6;
+    }
+    
+    /* Category and city selection styling */
+    .category-selector-container, .ville-secteur-container {
+      margin-bottom: 16px;
+    }
+    
+    #categoryDropdownBtn, #citySelectorBtn {
+      width: 100%;
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    /* Category item styling */
+    .category-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.1s;
+    }
+    
+    .category-item:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .category-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: #f0f0f0;
+      margin-right: 12px;
+    }
+    
+    .category-icon i {
+      font-size: 16px;
+      color: #5f6368;
+    }
+    
+    /* City item styling */
+    .city-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background-color 0.1s;
+    }
+    
+    .city-item:hover {
+      background-color: #f8f9fa;
+    }
+    
+    /* Image upload styling */
+    .image-upload-container {
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .image-preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    
+    .image-preview {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .image-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .image-preview .remove-image {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      text-align: center;
+      line-height: 22px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #d93025;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
   </style>
 
   <div class="form-section">
@@ -34,15 +290,27 @@
     <p>Grâce à ces informations les acheteurs peuvent trouver votre annonce plus facilement.</p>
     <%= form.label :category, "Catégorie *", class: "form-label" %>
 
-    <%= form.select :category, options_for_select([['Sélectionner une catégorie', ''], ['Informatique, Multimedia et Gadgets', 'informatique-multimedia'], ['Equipement pour Bébé et Enfant', 'equipement-bebe'], ['Maison et Jardin', 'maison-jardin'], ['Animalerie', 'animalerie'], ['Instruments de musique', 'instruments-musique'], ['Loisirs et Divertissements', 'loisirs-divertissements'], ['Habillement et Mode', 'habillement-mode'], ['Bien être et Sport', 'bien-etre-sport'], ['Matériels Professionnels', 'materiels-professionnels'], ['Stocks et Vente en gros', 'stocks-vente-gros'], ['Voitures', 'voitures'], ['Motos', 'motos'], ['Vélos', 'velos'], ['Pièces et Accessoires pour véhicules', 'pieces-accessoires'], ['Camions et Engins', 'camions-engins'], ['Bateaux', 'bateaux'], ['Autres Véhicules', 'autres-vehicules'], ['Appartements', 'appartements'], ['Maisons', 'maisons'], ['Villas-Riad', 'villas-riad'], ['Bureaux et Plateaux', 'bureaux-plateaux'], ['Magasins, Commerces et Locaux industriels', 'magasins-commerces'], ['Terrains, Fermes et Equipement Professionels', 'terrains-fermes'], ['Autre Immobilier', 'autre-immobilier'], ['Emploi', 'emploi'], ['Services', 'services'], ['Stages, Cours et Formations', 'stages-cours-formations'], ['Business et Affaires commerciales', 'business-affaires'], ['Évènements', 'evenements']], annonce.category), {}, class: "form-control" %>
+    <div class="category-selector-container">
+      <div class="category-dropdown position-relative">
+        <button type="button" class="d-flex align-items-center justify-content-between" id="categoryDropdownBtn">
+          <span id="selectedCategoryText">Sélectionner la catégorie</span>
+          <i class="bi bi-chevron-down"></i>
+        </button>
+      </div>
+       
+      <!-- Hidden input field that will store the actual category value -->
+      <%= form.hidden_field :category, id: "categoryHiddenInput" %>
+    </div>
 
     <%= form.label :transaction_type, "Type de transaction", class: "form-label" %>
     <div class="radio-group">
-      <%= form.radio_button :transaction_type, 'sell', checked: true %> Vente
-      <%= form.radio_button :transaction_type, 'buy' %> Demande
+      <%= form.radio_button :transaction_type, 'sell', checked: true, class: "form-check-input" %> 
+      <label for="annonce_transaction_type_sell">Vente</label>
+      
+      <%= form.radio_button :transaction_type, 'buy', class: "form-check-input" %> 
+      <label for="annonce_transaction_type_buy">Demande</label>
     </div>
     
-
     <%= form.label :titre, "Titre de l'annonce *", class: "form-label" %>
     <%= form.text_field :titre, placeholder: "Entrer le titre", class: "form-control" %>
 
@@ -51,20 +319,48 @@
   </div>
 
   <div class="form-section">
-    <h2>Localisation & Date Publication</h2>
-    <%= form.label :localisation, "Localisation *", class: "form-label" %>
-    <%= form.text_field :localisation, placeholder: "Entrez votre localisation", class: "form-control" %>
+    <h2>Votre Adresse</h2>
+    <p>Adresse principale de l'annonce</p>
     
-    <%= form.label :date_publication, "Date publication *", class: "form-label" %>
-    <%= form.date_field :date_publication, class: "form-control" %>
+    <div class="location-fields-container">
+      <div class="ville-secteur-container mb-3">
+        <label for="ville_secteur" class="form-label">Ville - Secteur *</label>
+        <div class="position-relative">
+          <button type="button" class="d-flex align-items-center justify-content-between" id="citySelectorBtn">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-geo-alt me-2"></i>
+              <span id="selectedCityText">Sélectionner</span>
+            </div>
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          
+          <!-- Hidden input for storing the selected city value -->
+          <%= form.hidden_field :ville_secteur, id: "villeSecteurInput" %>
+        </div>
+      </div>
+      
+      <div class="adresse-bien-container mb-3">
+        <label for="adresse_bien" class="form-label">Adresse du bien</label>
+        <div class="input-group">
+          <span class="input-group-text bg-white">
+            <i class="bi bi-house"></i>
+          </span>
+          <%= form.text_field :adresse_bien, id: "adresseBienInput", placeholder: "Adresse du bien", class: "form-control" %>
+        </div>
+      </div>
+      
+      <!-- Hidden field that will combine both values -->
+      <%= form.hidden_field :localisation, id: "localisationCombinedInput" %>
+    </div>
   </div>
 
   <div class="form-section">
     <h2>Vos coordonnées</h2>
     <%= form.label :phone, "Numéro de téléphone *", class: "form-label" %>
-    <%= form.text_field :phone, placeholder: "Numéro de téléphone", value: "",  class: "form-control" %>
-    <div>
-      <%= form.check_box :phone_hidden %> Masquer le numéro dans l'annonce
+    <%= form.text_field :phone, placeholder: "Numéro de téléphone", value: "", class: "form-control" %>
+    <div class="mb-3">
+      <%= form.check_box :phone_hidden, class: "form-check-input" %> 
+      <label for="annonce_phone_hidden" class="form-check-label">Masquer le numéro dans l'annonce</label>
     </div>
   </div>
 
@@ -75,7 +371,7 @@
     <div class="image-upload-container">
       <%= form.label :images, "Images de l'annonce (#{current_image_count}/5 images, au moins 1 requise)", class: "form-label" %>
       <%= form.file_field :images, multiple: true, accept: 'image/*', class: "form-control", id: "image-upload" %>
-      <small>Cliquez pour sélectionner ou glisser-déposer plusieurs images (jusqu'à <%= 5 - current_image_count %> de plus)</small>
+      <small class="text-muted">Cliquez pour sélectionner ou glisser-déposer plusieurs images (jusqu'à <%= 5 - current_image_count %> de plus)</small>
     </div>
     
     <% if annonce.images.attached? && annonce.images.count > 0 %>
@@ -120,58 +416,683 @@
     <%= form.text_field :prix, placeholder: "Entrer le prix", class: "form-control" %>
   </div>
 
-  <%= form.submit "Continuer", class: "btn btn-primary" %>
+  <div class="d-grid">
+    <%= form.submit "CONTINUER", class: "btn btn-primary" %>
+  </div>
+  
+  <!-- Panel Overlay Background -->
+  <div class="panel-overlay" id="panelOverlay"></div>
+  
+  <!-- Category Selection Panel -->
+  <div class="side-panel" id="categoryPanel">
+    <div class="panel-header">
+      <h2 class="fs-5 fw-bold mb-0">Sélectionner la catégorie</h2>
+      <button type="button" class="close-btn" id="closeCategoryBtn">&times;</button>
+    </div>
+    <div class="panel-body">
+      <!-- Main Categories -->
+      <div class="category-main-menu">
+        <div class="category-item" data-category="avito-market">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-cart"></i>
+            </div>
+            <span>Avito Market</span>
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </div>
+        
+        <div class="category-item" data-category="avito-vehicules">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-car-front"></i>
+            </div>
+            <span>Avito Véhicules</span>
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </div>
+        
+        <div class="category-item" data-category="avito-immobilier">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-house"></i>
+            </div>
+            <span>Avito Immobilier</span>
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </div>
+        
+        <div class="category-item" data-category="avito-entreprise">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-briefcase"></i>
+            </div>
+            <span>Avito Entreprise</span>
+          </div>
+          <i class="bi bi-chevron-right"></i>
+        </div>
+      </div>
+      
+      <!-- Subcategories for Avito Market -->
+      <div class="category-sub-menu d-none" id="avito-market-submenu">
+        <div class="category-back-btn d-flex align-items-center p-2">
+          <i class="bi bi-chevron-left me-2"></i>
+          <span>Retour</span>
+        </div>
+        <div class="category-item" data-value="informatique-multimedia">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-laptop"></i>
+            </div>
+            <span>Informatique, Multimedia et Gadgets</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="equipement-bebe">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-balloon"></i>
+            </div>
+            <span>Equipement pour Bébé et Enfant</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="maison-jardin">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-lamp"></i>
+            </div>
+            <span>Maison et Jardin</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="animalerie">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-twitter"></i>
+            </div>
+            <span>Animalerie</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="instruments-musique">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-music-note-beamed"></i>
+            </div>
+            <span>Instruments de musique</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="loisirs-divertissements">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-controller"></i>
+            </div>
+            <span>Loisirs et Divertissements</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="habillement-mode">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-tshirt"></i>
+            </div>
+            <span>Habillement et Mode</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="bien-etre-sport">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-heart-pulse"></i>
+            </div>
+            <span>Bien être et Sport</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="materiels-professionnels">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-tools"></i>
+            </div>
+            <span>Matériels Professionnels</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="stocks-vente-gros">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-box-seam"></i>
+            </div>
+            <span>Stocks et Vente en gros</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Subcategories for Avito Véhicules -->
+      <div class="category-sub-menu d-none" id="avito-vehicules-submenu">
+        <div class="category-back-btn d-flex align-items-center p-2">
+          <i class="bi bi-chevron-left me-2"></i>
+          <span>Retour</span>
+        </div>
+        <div class="category-item" data-value="voitures">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-car-front"></i>
+            </div>
+            <span>Voitures</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="motos">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-bicycle"></i>
+            </div>
+            <span>Motos</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="velos">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-bicycle"></i>
+            </div>
+            <span>Vélos</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="pieces-accessoires">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-gear"></i>
+            </div>
+            <span>Pièces et Accessoires pour véhicules</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="camions-engins">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-truck"></i>
+            </div>
+            <span>Camions et Engins</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="bateaux">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-water"></i>
+            </div>
+            <span>Bateaux</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="autres-vehicules">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-three-dots"></i>
+            </div>
+            <span>Autres Véhicules</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Subcategories for Avito Immobilier -->
+      <div class="category-sub-menu d-none" id="avito-immobilier-submenu">
+        <div class="category-back-btn d-flex align-items-center p-2">
+          <i class="bi bi-chevron-left me-2"></i>
+          <span>Retour</span>
+        </div>
+        <div class="category-item" data-value="appartements">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-building"></i>
+            </div>
+            <span>Appartements</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="maisons">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-house-door"></i>
+            </div>
+            <span>Maisons</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="villas-riad">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-house"></i>
+            </div>
+            <span>Villas-Riad</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="bureaux-plateaux">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-building-fill"></i>
+            </div>
+            <span>Bureaux et Plateaux</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="magasins-commerces">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-shop"></i>
+            </div>
+            <span>Magasins, Commerces et Locaux industriels</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="terrains-fermes">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-map"></i>
+            </div>
+            <span>Terrains, Fermes et Equipement Professionels</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="autre-immobilier">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-three-dots"></i>
+            </div>
+            <span>Autre Immobilier</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Subcategories for Avito Entreprise -->
+      <div class="category-sub-menu d-none" id="avito-entreprise-submenu">
+        <div class="category-back-btn d-flex align-items-center p-2">
+          <i class="bi bi-chevron-left me-2"></i>
+          <span>Retour</span>
+        </div>
+        <div class="category-item" data-value="emploi">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-person-workspace"></i>
+            </div>
+            <span>Emploi</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="services">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-tools"></i>
+            </div>
+            <span>Services</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="stages-cours-formations">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-journal-text"></i>
+            </div>
+            <span>Stages, Cours et Formations</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="business-affaires">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-briefcase"></i>
+            </div>
+            <span>Business et Affaires commerciales</span>
+          </div>
+        </div>
+        
+        <div class="category-item" data-value="evenements">
+          <div class="d-flex align-items-center">
+            <div class="category-icon">
+              <i class="bi bi-calendar-event"></i>
+            </div>
+            <span>Évènements</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- City Selection Panel -->
+  <div class="side-panel" id="cityPanel">
+    <div class="panel-header">
+      <h2 class="fs-5 fw-bold mb-0">Sélectionner la ville</h2>
+      <button type="button" class="close-btn" id="closeCityBtn">&times;</button>
+    </div>
+    <div class="panel-body">
+      <div class="mb-3 position-relative">
+        <div class="input-group">
+          <span class="input-group-text bg-white">
+            <i class="bi bi-search"></i>
+          </span>
+          <input type="text" class="form-control" id="citySearchInput" placeholder="Rechercher une ville">
+        </div>
+      </div>
+      
+      <div class="city-list-container" style="max-height: calc(100vh - 160px); overflow-y: auto;">
+        <ul class="list-unstyled mb-0">
+          <li class="city-item" data-value="marrakech">
+            <div class="d-flex align-items-center">
+              <span>Marrakech</span>
+            </div>
+          </li>
+          <li class="city-item" data-value="tanger">
+            <div class="d-flex align-items-center">
+              <span>Tanger</span>
+            </div>
+          </li>
+          <li class="city-item" data-value="casablanca">
+            <div class="d-flex align-items-center">
+              <span>Casablanca</span>
+            </div>
+          </li>
+          <li class="city-item" data-value="fes">
+            <div class="d-flex align-items-center">
+              <span>Fès</span>
+            </div>
+          </li>
+          <li class="city-item" data-value="safi">
+            <div class="d-flex align-items-center">
+              <span>Safi</span>
+            </div>
+          </li>
+          <li class="city-item" data-value="agadir">
+            <div class="d-flex align-items-center">
+              <span>Agadir</span>
+            </div>
+          </li>
+          <li class="city-item" data-value="temara">
+            <div class="d-flex align-items-center">
+              <span>Temara</span>
+            </div>
+          </li>
+          <li class="city-item" data-value="mohammedia">
+            <div class="d-flex align-items-center">
+              <span>Mohammedia</span>
+            </div>
+          </li>
+          <li class="city-item" data-value="sale">
+            <div class="d-flex align-items-center">
+              <span>Salé</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 <% end %>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Panel elements
+    const categoryPanel = document.getElementById('categoryPanel');
+    const cityPanel = document.getElementById('cityPanel');
+    const panelOverlay = document.getElementById('panelOverlay');
+    
+    // Buttons
+    const categoryDropdownBtn = document.getElementById('categoryDropdownBtn');
+    const closeCategoryBtn = document.getElementById('closeCategoryBtn');
+    const citySelectorBtn = document.getElementById('citySelectorBtn');
+    const closeCityBtn = document.getElementById('closeCityBtn');
+    
+    // Form inputs
+    const categoryHiddenInput = document.getElementById('categoryHiddenInput');
+    const selectedCategoryText = document.getElementById('selectedCategoryText');
+    const villeSecteurInput = document.getElementById('villeSecteurInput');
+    const adresseBienInput = document.getElementById('adresseBienInput');
+    const localisationCombinedInput = document.getElementById('localisationCombinedInput');
+    const selectedCityText = document.getElementById('selectedCityText');
+    const citySearchInput = document.getElementById('citySearchInput');
+    
+    // Category panel
+    const mainMenu = document.querySelector('.category-main-menu');
+    const subMenus = document.querySelectorAll('.category-sub-menu');
+    
+    // Function to open panel
+    function openPanel(panel) {
+      panel.classList.add('show');
+      panelOverlay.classList.add('show');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+    
+    // Function to close panel
+    function closePanel(panel) {
+      panel.classList.remove('show');
+      panelOverlay.classList.remove('show');
+      document.body.style.overflow = ''; // Allow scrolling
+    }
+    
+    // Category panel toggle
+    if (categoryDropdownBtn) {
+      categoryDropdownBtn.addEventListener('click', function() {
+        openPanel(categoryPanel);
+        // Show main menu, hide all submenus
+        mainMenu.classList.remove('d-none');
+        subMenus.forEach(submenu => submenu.classList.add('d-none'));
+      });
+    }
+    
+    if (closeCategoryBtn) {
+      closeCategoryBtn.addEventListener('click', function() {
+        closePanel(categoryPanel);
+      });
+    }
+    
+    // City panel toggle
+    if (citySelectorBtn) {
+      citySelectorBtn.addEventListener('click', function() {
+        openPanel(cityPanel);
+      });
+    }
+    
+    if (closeCityBtn) {
+      closeCityBtn.addEventListener('click', function() {
+        closePanel(cityPanel);
+      });
+    }
+    
+    // Close panels when clicking overlay
+    if (panelOverlay) {
+      panelOverlay.addEventListener('click', function() {
+        closePanel(categoryPanel);
+        closePanel(cityPanel);
+      });
+    }
+    
+    // Handle main category clicks to show submenu
+    document.querySelectorAll('.category-main-menu .category-item').forEach(function(item) {
+      item.addEventListener('click', function() {
+        const categoryId = this.getAttribute('data-category');
+        const submenu = document.getElementById(categoryId + '-submenu');
+        
+        if (submenu) {
+          // Hide main menu, show the submenu
+          mainMenu.classList.add('d-none');
+          submenu.classList.remove('d-none');
+        }
+      });
+    });
+    
+    // Handle back button clicks in submenus
+    document.querySelectorAll('.category-back-btn').forEach(function(backBtn) {
+      backBtn.addEventListener('click', function() {
+        // Hide all submenus, show main menu
+        subMenus.forEach(submenu => submenu.classList.add('d-none'));
+        mainMenu.classList.remove('d-none');
+      });
+    });
+    
+    // Handle subcategory selection
+    document.querySelectorAll('.category-sub-menu .category-item').forEach(function(item) {
+      if (!item.classList.contains('category-back-btn')) {
+        item.addEventListener('click', function() {
+          const categoryValue = this.getAttribute('data-value');
+          const categoryText = this.querySelector('span').innerText;
+          
+          // Set the selected value in the hidden input
+          if (categoryHiddenInput) categoryHiddenInput.value = categoryValue;
+          // Update the displayed text
+          if (selectedCategoryText) selectedCategoryText.innerText = categoryText;
+          // Close the panel
+          closePanel(categoryPanel);
+        });
+      }
+    });
+    
+    // Handle city item selection
+    document.querySelectorAll('.city-item').forEach(function(item) {
+      item.addEventListener('click', function() {
+        const cityValue = this.getAttribute('data-value');
+        const cityText = this.querySelector('span').innerText;
+        
+        // Set the selected value in the hidden input
+        if (villeSecteurInput) villeSecteurInput.value = cityValue;
+        // Update the displayed text
+        if (selectedCityText) selectedCityText.innerText = cityText;
+        // Close the panel
+        closePanel(cityPanel);
+        
+        // Combine ville-secteur and adresse for localisation field
+        updateLocalisationField();
+      });
+    });
+    
+    // City search functionality
+    if (citySearchInput) {
+      citySearchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        
+        document.querySelectorAll('.city-item').forEach(function(item) {
+          const cityName = item.querySelector('span').innerText.toLowerCase();
+          
+          if (cityName.includes(searchTerm)) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    }
+    
+    // Function to combine ville-secteur and adresse into localisation
+    function updateLocalisationField() {
+      if (!villeSecteurInput || !adresseBienInput || !localisationCombinedInput) return;
+      
+      const villeSecteur = villeSecteurInput.value;
+      const adresseBien = adresseBienInput.value;
+      
+      if (villeSecteur) {
+        if (adresseBien) {
+          localisationCombinedInput.value = `${villeSecteur}, ${adresseBien}`;
+        } else {
+          localisationCombinedInput.value = villeSecteur;
+        }
+      } else {
+        localisationCombinedInput.value = adresseBien;
+      }
+    }
+    
+    // Update combined localisation when address changes
+    if (adresseBienInput) {
+      adresseBienInput.addEventListener('input', updateLocalisationField);
+    }
+    
+    // Pre-select category if exists
+    if (categoryHiddenInput && categoryHiddenInput.value && selectedCategoryText) {
+      const selectedItem = document.querySelector(`.category-item[data-value="${categoryHiddenInput.value}"]`);
+      if (selectedItem) {
+        selectedCategoryText.innerText = selectedItem.querySelector('span').innerText;
+      }
+    }
+    
+    // Pre-select city if exists and initialize localisation
+    if (villeSecteurInput && villeSecteurInput.value && selectedCityText) {
+      const selectedItem = document.querySelector(`.city-item[data-value="${villeSecteurInput.value}"]`);
+      if (selectedItem) {
+        selectedCityText.innerText = selectedItem.querySelector('span').innerText;
+      }
+      updateLocalisationField();
+    } else if (localisationCombinedInput && localisationCombinedInput.value) {
+      // If there's an existing localisation but no ville_secteur, try to parse it
+      const locParts = localisationCombinedInput.value.split(',');
+      if (locParts.length > 0) {
+        const villeCandidate = locParts[0].trim().toLowerCase();
+        document.querySelectorAll('.city-item').forEach(function(item) {
+          const cityValue = item.getAttribute('data-value');
+          if (villeCandidate === cityValue || villeCandidate === item.querySelector('span').innerText.toLowerCase()) {
+            if (villeSecteurInput) villeSecteurInput.value = cityValue;
+            if (selectedCityText) selectedCityText.innerText = item.querySelector('span').innerText;
+            if (locParts.length > 1 && adresseBienInput) {
+              adresseBienInput.value = locParts.slice(1).join(',').trim();
+            }
+          }
+        });
+      }
+    }
+    
+    // Image upload handling
     const imageUpload = document.getElementById('image-upload');
     const previewContainer = document.getElementById('image-preview-container');
     
     // Track the number of existing images
     let existingImageCount = <%= annonce.images.attached? ? annonce.images.count : 0 %>;
     
-    imageUpload.addEventListener('change', function() {
-      // Check if total images would exceed the limit
-      if (this.files.length + existingImageCount > 5) {
-        alert(`Vous avez déjà ${existingImageCount} image(s). Vous ne pouvez ajouter que ${5 - existingImageCount} image(s) de plus.`);
-        this.value = '';
-        return;
-      }
-      
-      // Create previews for each selected file
-      for (let i = 0; i < this.files.length; i++) {
-        const file = this.files[i];
-        
-        if (!file.type.match('image.*')) {
-          continue;
+    if (imageUpload) {
+      imageUpload.addEventListener('change', function() {
+        // Check if total images would exceed the limit
+        if (this.files.length + existingImageCount > 5) {
+          alert(`Vous avez déjà ${existingImageCount} image(s). Vous ne pouvez ajouter que ${5 - existingImageCount} image(s) de plus.`);
+          this.value = '';
+          return;
         }
         
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-          const previewDiv = document.createElement('div');
-          previewDiv.className = 'image-preview';
+        // Create previews for each selected file
+        for (let i = 0; i < this.files.length; i++) {
+          const file = this.files[i];
           
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          img.alt = 'Preview';
+          if (!file.type.match('image.*')) {
+            continue;
+          }
           
-          const removeBtn = document.createElement('span');
-          removeBtn.className = 'remove-image';
-          removeBtn.innerHTML = '×';
-          removeBtn.addEventListener('click', function() {
-            previewDiv.remove();
-          });
+          const reader = new FileReader();
           
-          previewDiv.appendChild(img);
-          previewDiv.appendChild(removeBtn);
-          previewContainer.appendChild(previewDiv);
-        };
-        
-        reader.readAsDataURL(file);
-      }
-    });
+          reader.onload = function(e) {
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'image-preview';
+            
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = 'Preview';
+            
+            const removeBtn = document.createElement('span');
+            removeBtn.className = 'remove-image';
+            removeBtn.innerHTML = '×';
+            removeBtn.addEventListener('click', function() {
+              previewDiv.remove();
+            });
+            
+            previewDiv.appendChild(img);
+            previewDiv.appendChild(removeBtn);
+            if (previewContainer) {
+              previewContainer.appendChild(previewDiv);
+            }
+          };
+          
+          reader.readAsDataURL(file);
+        }
+      });
+    }
     
     // Function to handle image deletion
     function handleImageDeletion(imageId) {

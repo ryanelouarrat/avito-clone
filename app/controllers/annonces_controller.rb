@@ -1,8 +1,15 @@
 class AnnoncesController < ApplicationController
   before_action :set_annonce, only: [:show, :edit, :update, :destroy]
+  before_action :require_login, only: [:new, :create, :edit, :update, :destroy]
+  before_action :hide_header, only: [:new, :edit]
 
   def index
     @annonces = Annonce.all
+    
+    # Search functionality
+    @annonces = @annonces.where("titre LIKE ? OR description LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%") if params[:q].present?
+    @annonces = @annonces.where(category: params[:category]) if params[:category].present?
+    @annonces = @annonces.where(localisation: params[:localisation]) if params[:localisation].present?
   end
 
   def show
@@ -14,11 +21,13 @@ class AnnoncesController < ApplicationController
 
   def create
     @annonce = Annonce.new(annonce_params)
-    @annonce.utilisateur_id = 1  # Replace later with current_user.id
+    @annonce.utilisateur_id = current_utilisateur.id
+    @annonce.date_publication = Time.current
 
     if @annonce.save
       redirect_to @annonce, notice: "Annonce créée avec succès !"
     else
+      @hide_header = true
       render :new, status: :unprocessable_entity
     end
   end
@@ -27,9 +36,16 @@ class AnnoncesController < ApplicationController
   end
 
   def update
-    if @annonce.update(annonce_params)
+    @annonce.assign_attributes(annonce_params)
+    
+    # Only update the date if it's a significant edit
+    # Alternatively, you could keep the original date by commenting this out
+    # @annonce.date_publication = Time.current
+
+    if @annonce.save
       redirect_to @annonce, notice: 'Annonce mise à jour avec succès.'
     else
+      @hide_header = true
       render :edit, status: :unprocessable_entity
     end
   end
@@ -51,4 +67,7 @@ class AnnoncesController < ApplicationController
     )
   end
   
+  def hide_header
+    @hide_header = true
+  end
 end

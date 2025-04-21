@@ -14,7 +14,9 @@
   </head>
 
   <body>
-    <%= render 'shared/header' %>
+    <% unless @hide_header %>
+      <%= render 'shared/header' %>
+    <% end %>
 
     <!-- Notices -->
     <% if notice %>

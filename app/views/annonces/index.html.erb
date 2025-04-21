@@ -1,5 +1,5 @@
 <% content_for :head do %>
-  <%= stylesheet_link_tag "annonces/index", media: "all" %>
+  <%= stylesheet_link_tag "application", media: "all" %>
 <% end %>
 
 <%# Add spacing to avoid header overlap %>
@@ -9,41 +9,39 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <form class="d-flex">
+        <%= form_with url: annonces_path, method: :get, class: "d-flex" do |f| %>
           <div class="input-group flex-grow-1">
-            <input type="text" class="form-control search-input" placeholder="Que recherchez-vous ?">
+            <%= f.text_field :q, class: "form-control search-input", placeholder: "Que recherchez-vous ?", value: params[:q] %>
             
             <div class="input-group-append">
-              <button class="btn btn-outline-secondary dropdown-toggle category-select" type="button" data-bs-toggle="dropdown">
-                <i class="bi bi-grid me-2"></i> Toutes les catégories
-              </button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Immobilier</a>
-                <a class="dropdown-item" href="#">Véhicules</a>
-                <a class="dropdown-item" href="#">Marketplace</a>
-                <a class="dropdown-item" href="#">Emplois et Services</a>
-              </div>
+              <%= f.select :category, 
+                [["Toutes les catégories", ""], 
+                 ["Immobilier", "immobilier"], 
+                 ["Véhicules", "vehicules"], 
+                 ["Marketplace", "marketplace"],
+                 ["Emplois et Services", "emplois_services"]], 
+                { selected: params[:category] },
+                { class: "form-select category-select" } %>
             </div>
             
             <div class="input-group-append">
-              <button class="btn btn-outline-secondary dropdown-toggle location-select" type="button" data-bs-toggle="dropdown">
-                <i class="bi bi-geo-alt me-2"></i> Choisir ville - secteur
-              </button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Casablanca</a>
-                <a class="dropdown-item" href="#">Rabat</a>
-                <a class="dropdown-item" href="#">Marrakech</a>
-                <a class="dropdown-item" href="#">Tanger</a>
-              </div>
+              <%= f.select :localisation, 
+                [["Choisir ville - secteur", ""], 
+                 ["Casablanca", "Casablanca"], 
+                 ["Rabat", "Rabat"], 
+                 ["Marrakech", "Marrakech"],
+                 ["Tanger", "Tanger"]], 
+                { selected: params[:localisation] },
+                { class: "form-select location-select" } %>
             </div>
             
             <div class="input-group-append">
-              <button class="btn btn-primary search-btn" type="submit">
+              <%= f.button type: "submit", class: "btn btn-primary search-btn" do %>
                 <i class="bi bi-search"></i> Rechercher
-              </button>
+              <% end %>
             </div>
           </div>
-        </form>
+        <% end %>
       </div>
     </div>
   </div>
@@ -176,58 +174,6 @@
   </div>
 </div>
 
-<!-- Dernières annonces section (replacing Notre sélection premium) -->
-<div class="container mb-5">
-  <div class="section-header">
-    <h3 class="section-title">Dernières annonces</h3>
-    <div class="arrow-nav">
-      <div class="arrow-btn"><i class="bi bi-chevron-left"></i></div>
-      <div class="arrow-btn"><i class="bi bi-chevron-right"></i></div>
-    </div>
-  </div>
-  
-  <div class="row">
-    <% @annonces.order(created_at: :desc).limit(4).each do |annonce| %>
-      <div class="col-md-3 col-sm-6 mb-4">
-        <div class="card h-100 shadow-sm">
-          <% if [true, false].sample %>
-            <div class="premium-badge">Premium</div>
-          <% end %>
-          
-          <!-- Image -->
-          <div class="card-img-container">
-            <% if annonce.images.attached? && annonce.images.first.present? %>
-              <%= image_tag annonce.images.first, class: "w-100 h-100 object-fit-cover" %>
-            <% else %>
-              <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
-                <span>Pas d'image</span>
-              </div>
-            <% end %>
-          </div>
-          
-          <div class="card-body p-3">
-            <!-- User Info -->
-            <div class="d-flex align-items-center mb-2">
-              <div class="user-avatar bg-secondary">
-                <i class="bi bi-person-circle text-white"></i>
-              </div>
-              <div class="time-badge">
-                <i class="bi bi-clock me-1"></i> il y a <%= rand(1..24) %> heures
-              </div>
-            </div>
-            
-            <!-- Title -->
-            <h5 class="card-title h6 fw-bold mb-2"><%= annonce.titre %></h5>
-            
-            <!-- Price -->
-            <p class="price-text mt-auto mb-2"><%= annonce.prix %> MAD</p>
-          </div>
-        </div>
-      </div>
-    <% end %>
-  </div>
-</div>
-
 <!-- All announcements -->
 <div class="container mb-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
@@ -267,12 +213,14 @@
             <!-- Buttons -->
             <div class="btn-group btn-group-sm w-100">
               <%= link_to 'Voir', annonce_path(annonce), class: "btn btn-outline-primary" %>
-              <%= link_to 'Modifier', edit_annonce_path(annonce), class: "btn btn-outline-warning" %>
-              <%= button_to 'Supprimer', annonce_path(annonce),
-                    method: :delete,
-                    data: { turbo_confirm: 'Supprimer cette annonce ?' },
-                    class: "btn btn-outline-danger",
-                    form: { class: "d-inline" } %>
+              <% if logged_in? && current_utilisateur == annonce.utilisateur %>
+                <%= link_to 'Modifier', edit_annonce_path(annonce), class: "btn btn-outline-warning" %>
+                <%= button_to 'Supprimer', annonce_path(annonce),
+                      method: :delete,
+                      data: { turbo_confirm: 'Supprimer cette annonce ?' },
+                      class: "btn btn-outline-danger",
+                      form: { class: "d-inline" } %>
+              <% end %>
             </div>
           </div>
         </div>

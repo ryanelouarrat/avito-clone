@@ -184,3 +184,148 @@
 .avito-header .container{
 min-width: 80%;
 }
+
+/* Styles for annonces index page */
+
+/* Search area */
+.search-area {
+  background-color: #f8f9fa;
+  padding: 20px 0;
+  margin-top: 15px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.search-input {
+  border-right: none;
+}
+
+.category-select, .location-select {
+  border-radius: 0;
+  border-left: none;
+  background-color: white;
+}
+
+.search-btn {
+  border-radius: 0 4px 4px 0;
+}
+
+/* Category sections */
+.category-section {
+  padding: 30px 0;
+  background-color: white;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 15px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.category-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.category-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  font-size: 24px;
+}
+
+.immobilier-icon {
+  color: #3f8ffc;
+  background-color: #ebf3ff;
+}
+
+.vehicules-icon {
+  color: #ff5c62;
+  background-color: #ffebec;
+}
+
+.marketplace-icon {
+  color: #28a745;
+  background-color: #e8f8ed;
+}
+
+.emplois-icon {
+  color: #17a2b8;
+  background-color: #e3f4f6;
+}
+
+/* Annonce cards */
+.card-img-container {
+  height: 200px;
+  overflow: hidden;
+}
+
+.premium-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ffc107;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 1;
+}
+
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.time-badge {
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.price-text {
+  font-weight: bold;
+  color: #ff4757;
+  font-size: 18px;
+}
+
+/* Section headers */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.arrow-nav {
+  display: flex;
+}
+
+.arrow-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.arrow-btn:hover {
+  background-color: #e9ecef;
+}
