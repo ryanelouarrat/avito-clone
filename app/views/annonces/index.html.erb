@@ -3,40 +3,110 @@
 <% end %>
 
 <%# Add spacing to avoid header overlap %>
+<div style="margin-top: 20px;"></div>
 
 <!-- Search area -->
-<div class="search-area">
+<div class="search-area mb-4">
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <%= form_with url: annonces_path, method: :get, class: "d-flex" do |f| %>
-          <div class="input-group flex-grow-1">
-            <%= f.text_field :q, class: "form-control search-input", placeholder: "Que recherchez-vous ?", value: params[:q] %>
+        <%= form_with url: annonces_path, method: :get, class: "search-form" do |f| %>
+          <div class="input-group border rounded-pill overflow-hidden shadow-sm bg-white">
+            <%= f.text_field :q, class: "form-control border-0 search-input", placeholder: "Que recherchez-vous ?", value: params[:q] %>
             
-            <div class="input-group-append">
-              <%= f.select :category, 
-                [["Toutes les catégories", ""], 
-                 ["Immobilier", "immobilier"], 
-                 ["Véhicules", "vehicules"], 
-                 ["Marketplace", "marketplace"],
-                 ["Emplois et Services", "emplois_services"]], 
-                { selected: params[:category] },
-                { class: "form-select category-select" } %>
+            <div class="input-group-append border-start">
+              <div class="d-flex align-items-center px-3">
+                <i class="bi bi-grid-3x3-gap text-primary me-2"></i>
+                <%= f.select :category, 
+                  [
+                    ["Toutes les catégories", ""],
+                    ["Avito Market", "avito-market"],
+                    ["-- Informatique, Multimedia et Gadgets", "informatique-multimedia"],
+                    ["-- Equipement pour Bébé et Enfant", "equipement-bebe"],
+                    ["-- Maison et Jardin", "maison-jardin"],
+                    ["-- Animalerie", "animalerie"],
+                    ["-- Instruments de musique", "instruments-musique"],
+                    ["-- Loisirs et Divertissements", "loisirs-divertissements"],
+                    ["-- Habillement et Mode", "habillement-mode"],
+                    ["-- Bien être et Sport", "bien-etre-sport"],
+                    ["-- Matériels Professionnels", "materiels-professionnels"],
+                    ["-- Stocks et Vente en gros", "stocks-vente-gros"],
+                    ["Avito Véhicules", "avito-vehicules"],
+                    ["-- Voitures", "voitures"],
+                    ["-- Motos", "motos"],
+                    ["-- Vélos", "velos"],
+                    ["-- Pièces et Accessoires", "pieces-accessoires"],
+                    ["-- Camions et Engins", "camions-engins"],
+                    ["-- Bateaux", "bateaux"],
+                    ["-- Autres Véhicules", "autres-vehicules"],
+                    ["Avito Immobilier", "avito-immobilier"],
+                    ["-- Appartements", "appartements"],
+                    ["-- Maisons", "maisons"],
+                    ["-- Villas-Riad", "villas-riad"],
+                    ["-- Bureaux et Plateaux", "bureaux-plateaux"],
+                    ["-- Magasins et Commerces", "magasins-commerces"],
+                    ["-- Terrains et Fermes", "terrains-fermes"],
+                    ["-- Autre Immobilier", "autre-immobilier"],
+                    ["Avito Entreprise", "avito-entreprise"],
+                    ["-- Emploi", "emploi"],
+                    ["-- Services", "services"],
+                    ["-- Stages et Formations", "stages-cours-formations"],
+                    ["-- Business et Affaires", "business-affaires"],
+                    ["-- Évènements", "evenements"]
+                  ], 
+                  { selected: params[:category] },
+                  { class: "form-select border-0 category-select shadow-none pe-5", style: "min-width: 180px;" } %>
+              </div>
+            </div>
+            
+            <div class="input-group-append border-start">
+              <div class="d-flex align-items-center px-3">
+                <i class="bi bi-geo-alt text-primary me-2"></i>
+                <%= f.select :localisation, 
+                  [
+                    ["Choisir ville - secteur", ""],
+                    ["Casablanca", "casablanca"],
+                    ["Rabat", "rabat"],
+                    ["Fès", "fes"],
+                    ["Marrakech", "marrakech"],
+                    ["Agadir", "agadir"],
+                    ["Tanger", "tanger"],
+                    ["Meknès", "meknes"],
+                    ["Oujda", "oujda"],
+                    ["Kénitra", "kenitra"],
+                    ["Tétouan", "tetouan"],
+                    ["Salé", "sale"],
+                    ["Safi", "safi"],
+                    ["El Jadida", "el-jadida"],
+                    ["Khouribga", "khouribga"],
+                    ["Béni Mellal", "beni-mellal"],
+                    ["Mohammedia", "mohammedia"],
+                    ["Nador", "nador"],
+                    ["Taza", "taza"],
+                    ["Settat", "settat"],
+                    ["Autres villes", "autres"]
+                  ], 
+                  { selected: params[:localisation] },
+                  { class: "form-select border-0 location-select shadow-none pe-5", style: "min-width: 180px;" } %>
+              </div>
+            </div>
+
+            <div class="input-group-append border-start">
+              <div class="d-flex align-items-center px-3">
+                <i class="bi bi-arrow-left-right text-primary me-2"></i>
+                <%= f.select :transaction_type, 
+                  [
+                    ["Tous types", ""],
+                    ["À vendre", "sell"],
+                    ["Recherche", "buy"]
+                  ], 
+                  { selected: params[:transaction_type] },
+                  { class: "form-select border-0 transaction-select shadow-none pe-5", style: "min-width: 120px;" } %>
+              </div>
             </div>
             
             <div class="input-group-append">
-              <%= f.select :localisation, 
-                [["Choisir ville - secteur", ""], 
-                 ["Casablanca", "Casablanca"], 
-                 ["Rabat", "Rabat"], 
-                 ["Marrakech", "Marrakech"],
-                 ["Tanger", "Tanger"]], 
-                { selected: params[:localisation] },
-                { class: "form-select location-select" } %>
-            </div>
-            
-            <div class="input-group-append">
-              <%= f.button type: "submit", class: "btn btn-primary search-btn" do %>
+              <%= f.button type: "submit", class: "btn btn-primary search-btn px-4 rounded-0" do %>
                 <i class="bi bi-search"></i> Rechercher
               <% end %>
             </div>
@@ -47,184 +117,352 @@
   </div>
 </div>
 
-<!-- Main categories with icons - Based on Avito UI -->
-<div class="category-section">
+<!-- Main categories with icons -->
+<div class="category-section py-2 mb-4">
   <div class="container">
-    <div class="row">
+    <div class="row g-3">
       <div class="col-md-3 col-6">
-        <a href="#" class="text-decoration-none text-dark">
-          <div class="category-item">
-            <div class="category-icon immobilier-icon">
-              <i class="bi bi-house"></i>
+        <%= link_to annonces_path(category: "avito-immobilier"), class: "text-decoration-none text-dark" do %>
+          <div class="category-main-item bg-white p-4 rounded-4 text-center shadow-sm border">
+            <div class="d-flex flex-column align-items-center">
+              <div class="category-main-icon mb-3 text-primary">
+                <i class="bi bi-house fs-1"></i>
+              </div>
+              <h6 class="fw-normal mb-0">Immobilier</h6>
             </div>
-            <h6>Immobilier</h6>
           </div>
-        </a>
+        <% end %>
       </div>
       <div class="col-md-3 col-6">
-        <a href="#" class="text-decoration-none text-dark">
-          <div class="category-item">
-            <div class="category-icon vehicules-icon">
-              <i class="bi bi-truck"></i>
+        <%= link_to annonces_path(category: "avito-vehicules"), class: "text-decoration-none text-dark" do %>
+          <div class="category-main-item bg-white p-4 rounded-4 text-center shadow-sm border">
+            <div class="d-flex flex-column align-items-center">
+              <div class="category-main-icon mb-3 text-danger">
+                <i class="bi bi-truck fs-1"></i>
+              </div>
+              <h6 class="fw-normal mb-0">Véhicules</h6>
             </div>
-            <h6>Véhicules</h6>
           </div>
-        </a>
+        <% end %>
       </div>
       <div class="col-md-3 col-6">
-        <a href="#" class="text-decoration-none text-dark">
-          <div class="category-item">
-            <div class="category-icon marketplace-icon">
-              <i class="bi bi-cart"></i>
+        <%= link_to annonces_path(category: "avito-market"), class: "text-decoration-none text-dark" do %>
+          <div class="category-main-item bg-white p-4 rounded-4 text-center shadow-sm border">
+            <div class="d-flex flex-column align-items-center">
+              <div class="category-main-icon mb-3 text-success">
+                <i class="bi bi-cart fs-1"></i>
+              </div>
+              <h6 class="fw-normal mb-0">Marketplace</h6>
             </div>
-            <h6>Marketplace</h6>
           </div>
-        </a>
+        <% end %>
       </div>
       <div class="col-md-3 col-6">
-        <a href="#" class="text-decoration-none text-dark">
-          <div class="category-item">
-            <div class="category-icon emplois-icon">
-              <i class="bi bi-briefcase"></i>
+        <%= link_to annonces_path(category: "avito-entreprise"), class: "text-decoration-none text-dark" do %>
+          <div class="category-main-item bg-white p-4 rounded-4 text-center shadow-sm border">
+            <div class="d-flex flex-column align-items-center">
+              <div class="category-main-icon mb-3 text-info">
+                <i class="bi bi-briefcase fs-1"></i>
+              </div>
+              <h6 class="fw-normal mb-0">Emplois et Services</h6>
             </div>
-            <h6>Emplois et Services</h6>
           </div>
-        </a>
+        <% end %>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Catégories populaires -->
-<div class="container mt-4 mb-5">
+<div class="container mb-5">
   <h4 class="mb-4">Catégories populaires</h4>
   
-  <div class="row">
-    <div class="col-6 col-md-3 col-lg-2 mb-4">
-      <div class="category-item">
-        <div class="category-icon" style="color: #ff5c62; background-color: #ffebec;">
-          <i class="bi bi-car-front"></i>
+  <div class="row g-3">
+    <div class="col-6 col-md-3 col-lg-2 mb-3">
+      <%= link_to annonces_path(category: "voitures"), class: "text-decoration-none" do %>
+        <div class="category-popular-item text-center">
+          <div class="category-icon mx-auto mb-2" style="color: #ff5c62; background-color: #ffebec;">
+            <i class="bi bi-car-front"></i>
+          </div>
+          <h6 class="small text-center category-name">VOITURES D'OCCASION</h6>
         </div>
-        <h6 class="small text-center mt-2">VOITURES D'OCCASION</h6>
-      </div>
+      <% end %>
     </div>
     
-    <div class="col-6 col-md-3 col-lg-2 mb-4">
-      <div class="category-item">
-        <div class="category-icon" style="color: #ff5c62; background-color: #ffebec;">
-          <i class="bi bi-bicycle"></i>
+    <div class="col-6 col-md-3 col-lg-2 mb-3">
+      <%= link_to annonces_path(category: "motos"), class: "text-decoration-none" do %>
+        <div class="category-popular-item text-center">
+          <div class="category-icon mx-auto mb-2" style="color: #ff5c62; background-color: #ffebec;">
+            <i class="bi bi-bicycle"></i>
+          </div>
+          <h6 class="small text-center category-name">MOTOS</h6>
         </div>
-        <h6 class="small text-center mt-2">MOTOS</h6>
-      </div>
+      <% end %>
     </div>
     
-    <div class="col-6 col-md-3 col-lg-2 mb-4">
-      <div class="category-item">
-        <div class="category-icon" style="color: #3f8ffc; background-color: #ebf3ff;">
-          <i class="bi bi-house"></i>
+    <div class="col-6 col-md-3 col-lg-2 mb-3">
+      <%= link_to annonces_path(category: "avito-immobilier", transaction_type: "sell"), class: "text-decoration-none" do %>
+        <div class="category-popular-item text-center">
+          <div class="category-icon mx-auto mb-2" style="color: #3f8ffc; background-color: #ebf3ff;">
+            <i class="bi bi-house"></i>
+          </div>
+          <h6 class="small text-center category-name">VENTES IMMOBILIÈRES</h6>
         </div>
-        <h6 class="small text-center mt-2">VENTES IMMOBILIÈRES</h6>
-      </div>
+      <% end %>
     </div>
     
-    <div class="col-6 col-md-3 col-lg-2 mb-4">
-      <div class="category-item">
-        <div class="category-icon" style="color: #3f8ffc; background-color: #ebf3ff;">
-          <i class="bi bi-key"></i>
+    <div class="col-6 col-md-3 col-lg-2 mb-3">
+      <%= link_to annonces_path(category: "appartements"), class: "text-decoration-none" do %>
+        <div class="category-popular-item text-center">
+          <div class="category-icon mx-auto mb-2" style="color: #3f8ffc; background-color: #ebf3ff;">
+            <i class="bi bi-key"></i>
+          </div>
+          <h6 class="small text-center category-name">LOCATION IMMOBILIÈRE</h6>
         </div>
-        <h6 class="small text-center mt-2">LOCATION IMMOBILIÈRE</h6>
-      </div>
+      <% end %>
     </div>
     
-    <div class="col-6 col-md-3 col-lg-2 mb-4">
-      <div class="category-item">
-        <div class="category-icon" style="color: #3f8ffc; background-color: #ebf3ff;">
-          <i class="bi bi-building"></i>
+    <div class="col-6 col-md-3 col-lg-2 mb-3">
+      <%= link_to annonces_path(category: "appartements"), class: "text-decoration-none" do %>
+        <div class="category-popular-item text-center">
+          <div class="category-icon mx-auto mb-2" style="color: #3f8ffc; background-color: #ebf3ff;">
+            <i class="bi bi-building"></i>
+          </div>
+          <h6 class="small text-center category-name">APPARTEMENTS</h6>
         </div>
-        <h6 class="small text-center mt-2">APPARTEMENT LOCATION DE</h6>
-      </div>
+      <% end %>
     </div>
     
-    <div class="col-6 col-md-3 col-lg-2 mb-4">
-      <div class="category-item">
-        <div class="category-icon" style="color: #28a745; background-color: #e8f8ed;">
-          <i class="bi bi-lamp"></i>
+    <div class="col-6 col-md-3 col-lg-2 mb-3">
+      <%= link_to annonces_path(category: "maison-jardin"), class: "text-decoration-none" do %>
+        <div class="category-popular-item text-center">
+          <div class="category-icon mx-auto mb-2" style="color: #28a745; background-color: #e8f8ed;">
+            <i class="bi bi-lamp"></i>
+          </div>
+          <h6 class="small text-center category-name">MAISON ET JARDIN</h6>
         </div>
-        <h6 class="small text-center mt-2">MAISON ET JARDIN</h6>
-      </div>
+      <% end %>
     </div>
     
-    <div class="col-6 col-md-3 col-lg-2 mb-4">
-      <div class="category-item">
-        <div class="category-icon" style="color: #17a2b8; background-color: #e3f4f6;">
-          <i class="bi bi-laptop"></i>
+    <div class="col-6 col-md-3 col-lg-2 mb-3">
+      <%= link_to annonces_path(category: "informatique-multimedia"), class: "text-decoration-none" do %>
+        <div class="category-popular-item text-center">
+          <div class="category-icon mx-auto mb-2" style="color: #17a2b8; background-color: #e3f4f6;">
+            <i class="bi bi-laptop"></i>
+          </div>
+          <h6 class="small text-center category-name">INFORMATIQUE ET MULTIMEDIA</h6>
         </div>
-        <h6 class="small text-center mt-2">INFORMATIQUE, MULTIMEDIA ET</h6>
-      </div>
+      <% end %>
     </div>
     
-    <div class="col-6 col-md-3 col-lg-2 mb-4">
-      <div class="category-item">
-        <div class="category-icon" style="color: #17a2b8; background-color: #e3f4f6;">
-          <i class="bi bi-tshirt"></i>
+    <div class="col-6 col-md-3 col-lg-2 mb-3">
+      <%= link_to annonces_path(category: "habillement-mode"), class: "text-decoration-none" do %>
+        <div class="category-popular-item text-center">
+          <div class="category-icon mx-auto mb-2" style="color: #17a2b8; background-color: #e3f4f6;">
+            <i class="bi bi-tshirt"></i>
+          </div>
+          <h6 class="small text-center category-name">HABILLEMENT ET MODE</h6>
         </div>
-        <h6 class="small text-center mt-2">HABILLEMENT ET MODE</h6>
-      </div>
+      <% end %>
     </div>
   </div>
 </div>
 
-<!-- All announcements -->
+<!-- Nouvelles annonces de voitures section -->
 <div class="container mb-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="mb-0 fw-bold">Toutes les Annonces</h3>
+    <div class="d-flex align-items-center">
+      <h5 class="mb-0 fw-bold">Nouvelles annonces </h5>
+    </div>
+    <a href="#" class="text-decoration-none">Plus d'annonces</a>
   </div>
   
   <div class="row">
     <% @annonces.each do |annonce| %>
-      <div class="col-md-4">
-        <div class="card h-100 shadow-sm">
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 rounded-4 shadow-sm">
           <!-- Image -->
-          <div class="card-img-container">
+          <div class="card-img-container position-relative" style="height: 200px;">
             <% if annonce.images.attached? && annonce.images.first.present? %>
-              <%= image_tag annonce.images.first, class: "w-100 h-100 object-fit-cover" %>
+              <%= image_tag annonce.images.first, class: "rounded-top-4 w-100 h-100 object-fit-cover" %>
             <% else %>
-              <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
+              <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center rounded-top-4">
                 <span>Pas d'image</span>
               </div>
             <% end %>
+            
+            <!-- Edit button for owner -->
+            <% if logged_in? && current_utilisateur == annonce.utilisateur %>
+              <%= link_to edit_annonce_path(annonce), class: "edit-icon-btn" do %>
+                <i class="bi bi-pencil-square"></i>
+              <% end %>
+            <% end %>
           </div>
           
-          <div class="card-body">
-            <!-- Location -->
-            <p class="text-muted small mb-2">
-              <i class="bi bi-geo-alt"></i> <%= annonce.localisation %>
-            </p>
-            
-            <!-- Title -->
-            <h5 class="card-title fw-bold"><%= annonce.titre %></h5>
-            
-            <!-- Description - shortened -->
-            <p class="card-text text-muted small"><%= annonce.description.truncate(80) %></p>
+          <div class="card-body p-3">
+            <div class="d-flex align-items-center mb-2">
+              <!-- User profile picture -->
+              <div class="user-profile-pic me-2">
+                <% if annonce.utilisateur.respond_to?(:profile_picture) && annonce.utilisateur.profile_picture.attached? %>
+                  <%= image_tag annonce.utilisateur.profile_picture, class: "rounded-circle" %>
+                <% else %>
+                  <div class="default-profile-icon rounded-circle bg-light d-flex align-items-center justify-content-center">
+                    <i class="bi bi-person text-secondary"></i>
+                  </div>
+                <% end %>
+              </div>
+              <div>
+                <!-- Title -->
+                <h5 class="card-title fw-bold mb-0 text-truncate"><%= annonce.titre %></h5>
+                <p class="text-muted small mb-0"><%= annonce.utilisateur.nom if annonce.utilisateur.respond_to?(:nom) %></p>
+              </div>
+            </div>
             
             <!-- Price -->
-            <p class="price-text mt-auto mb-2"><%= annonce.prix %> MAD</p>
+            <p class="price-text fw-bold text-primary fs-5 mb-2"><%= number_with_delimiter(annonce.prix) %> DH</p>
             
-            <!-- Buttons -->
-            <div class="btn-group btn-group-sm w-100">
-              <%= link_to 'Voir', annonce_path(annonce), class: "btn btn-outline-primary" %>
-              <% if logged_in? && current_utilisateur == annonce.utilisateur %>
-                <%= link_to 'Modifier', edit_annonce_path(annonce), class: "btn btn-outline-warning" %>
-                <%= button_to 'Supprimer', annonce_path(annonce),
-                      method: :delete,
-                      data: { turbo_confirm: 'Supprimer cette annonce ?' },
-                      class: "btn btn-outline-danger",
-                      form: { class: "d-inline" } %>
-              <% end %>
+            <!-- Location and timestamp -->
+            <div class="d-flex justify-content-between text-muted small mb-2">
+              <span><i class="bi bi-geo-alt"></i> <%= annonce.localisation %></span>
+              <span><%= time_ago_in_words(annonce.date_publication) if annonce.date_publication.present? %></span>
+            </div>
+            
+            <!-- Action buttons -->
+            <div class="mt-3">
+              <%= link_to 'Voir détails', annonce_path(annonce), class: "btn btn-sm btn-outline-primary w-100 rounded-3" %>
             </div>
           </div>
         </div>
       </div>
     <% end %>
   </div>
+  <div class="d-flex justify-content-center mt-4">
+    <%= paginate @annonces %>
+  </div>
 </div>
+
+<!-- CSS Styles for Avito Clone -->
+<style>
+  body {
+    background-color: #f8f9fa;
+    color: #333;
+    font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  .search-area {
+    padding: 15px 0;
+  }
+  
+  .form-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px;
+    padding-right: 30px;
+  }
+  
+  .search-btn {
+    background-color: #1a73e8;
+    border-color: #1a73e8;
+  }
+  
+  .search-btn:hover {
+    background-color: #1765cc;
+    border-color: #1765cc;
+  }
+  
+  /* Category icons styling */
+  .category-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 24px;
+  }
+  
+  .category-name {
+    color: #333;
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+  
+  .category-popular-item:hover .category-name {
+    color: #1a73e8;
+  }
+  
+  /* Card styling */
+  .card {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+  }
+  
+  .price-text {
+    color: #1a73e8;
+  }
+  
+  /* Rounded corners */
+  .rounded-4 {
+    border-radius: 10px !important;
+  }
+  
+  .rounded-top-4 {
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+  }
+  
+  /* User profile picture styling */
+  .user-profile-pic {
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  
+  .user-profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .default-profile-icon {
+    width: 100%;
+    height: 100%;
+    font-size: 20px;
+  }
+  
+  /* Edit icon button styling */
+  .edit-icon-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a73e8;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+    z-index: 2;
+  }
+  
+  .edit-icon-btn:hover {
+    background-color: #fff;
+    color: #1765cc;
+    transform: scale(1.1);
+  }
+</style>

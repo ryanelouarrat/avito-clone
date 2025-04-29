@@ -4,12 +4,15 @@ class AnnoncesController < ApplicationController
   before_action :hide_header, only: [:new, :edit]
 
   def index
-    @annonces = Annonce.all
-    
+    # Eager load utilisateur and images for efficient queries
+    @annonces = Annonce.includes(:utilisateur, images_attachments: :blob)
     # Search functionality
     @annonces = @annonces.where("titre LIKE ? OR description LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%") if params[:q].present?
     @annonces = @annonces.where(category: params[:category]) if params[:category].present?
     @annonces = @annonces.where(localisation: params[:localisation]) if params[:localisation].present?
+    @annonces = @annonces.where(transaction_type: params[:transaction_type]) if params[:transaction_type].present?
+    # Paginate results to reduce load
+    @annonces = @annonces.page(params[:page]).per(12)
   end
 
   def show
@@ -36,12 +39,21 @@ class AnnoncesController < ApplicationController
   end
 
   def update
-    @annonce.assign_attributes(annonce_params)
+    # Assign basic attributes excluding image params
+    attrs = annonce_params.except(:images, :remove_image_ids)
+    @annonce.assign_attributes(attrs)
     
-    # Only update the date if it's a significant edit
-    # Alternatively, you could keep the original date by commenting this out
-    # @annonce.date_publication = Time.current
-
+    # Purge any images marked for removal
+    Array(params.dig(:annonce, :remove_image_ids)).each do |id|
+      img = @annonce.images.find_by(id: id)
+      img.purge if img
+    end
+    
+    # Attach any newly uploaded images
+    Array(params.dig(:annonce, :images)).each do |img|
+      @annonce.images.attach(img) if img.respond_to?(:content_type)
+    end
+    
     if @annonce.save
       redirect_to @annonce, notice: 'Annonce mise à jour avec succès.'
     else
@@ -63,7 +75,9 @@ class AnnoncesController < ApplicationController
 
   def annonce_params
     params.require(:annonce).permit(
-      :titre, :description, :prix, :localisation, :date_publication, :category, :transaction_type, images: []
+      :titre, :description, :prix, :localisation, :date_publication, :category, :transaction_type,
+      :phone, :phone_hidden,
+      images: [], remove_image_ids: []
     )
   end
   

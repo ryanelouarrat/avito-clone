@@ -160,14 +160,18 @@
       </div>
       
       <!-- Contact buttons -->
-      <div class="d-flex gap-2 mb-2">
-        <a href="#" class="btn btn-outline-success d-flex align-items-center justify-content-center" style="width: 50px;">
-          <i class="bi bi-whatsapp fs-5"></i>
-        </a>
-        <button class="btn btn-primary flex-grow-1 d-flex align-items-center justify-content-center">
-          <i class="bi bi-telephone me-2"></i> Contacter le Vendeur
-        </button>
-      </div>
+      <% unless @annonce.phone_hidden? %>
+        <div class="d-flex gap-2 mb-2">
+          <a href="https://wa.me/<%= @annonce.phone %>" target="_blank" class="btn btn-outline-success d-flex align-items-center justify-content-center" style="width: 50px;">
+            <i class="bi bi-whatsapp fs-5"></i>
+          </a>
+          <a href="tel:<%= @annonce.phone %>" class="btn btn-primary flex-grow-1 d-flex align-items-center justify-content-center">
+            <i class="bi bi-telephone me-2"></i> <%= @annonce.phone %>
+          </a>
+        </div>
+      <% else %>
+        <div class="alert alert-info mb-2">Le numéro est masqué par le vendeur.</div>
+      <% end %>
       
       <!-- Report abuse -->
       <div class="text-center mb-4">

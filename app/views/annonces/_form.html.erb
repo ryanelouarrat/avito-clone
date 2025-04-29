@@ -10,281 +10,6 @@
     </div>
   <% end %>
   
-  <style>
-    /* Reset and common styles */
-    body { 
-      font-family: Arial, sans-serif; 
-      background: #f5f5f5; 
-      padding: 0; 
-      margin: 0; 
-    }
-    
-    /* Panel styles - side panels for categories and cities */
-    .side-panel {
-      position: fixed;
-      top: 0;
-      right: -400px;
-      width: 400px;
-      height: 100vh;
-      background-color: white;
-      z-index: 2000;
-      transition: right 0.3s ease-in-out;
-      overflow-y: auto;
-      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-    }
-    
-    .side-panel.show {
-      right: 0;
-    }
-    
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 20px;
-      border-bottom: 1px solid #eee;
-    }
-    
-    .panel-body {
-      padding: 20px;
-    }
-    
-    .panel-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1999;
-      display: none;
-    }
-    
-    .panel-overlay.show {
-      display: block;
-    }
-    
-    .close-btn {
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: #333;
-    }
-    
-    /* Form section styling */
-    .form-section { 
-      background: white; 
-      padding: 24px; 
-      border-radius: 8px; 
-      margin-bottom: 20px; 
-      box-shadow: 0 1px 3px rgba(0,0,0,0.12); 
-    }
-    
-    .form-section h2 { 
-      margin-top: 0; 
-      margin-bottom: 10px; 
-      font-size: 1.2em;
-      font-weight: 600;
-      color: #333;
-    }
-    
-    .form-section p {
-      margin-top: 0;
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-    
-    /* Form controls */
-    .form-label { 
-      display: block; 
-      margin-top: 10px; 
-      margin-bottom: 6px;
-      font-weight: 500;
-      font-size: 14px;
-      color: #333;
-    }
-    
-    .form-control {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      background-color: white;
-      margin-bottom: 12px;
-      font-size: 14px;
-    }
-    
-    .form-control:focus {
-      outline: none;
-      border-color: #4285f4;
-      box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.1);
-    }
-    
-    .form-select {
-      appearance: none;
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      background-color: white;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 12px;
-      cursor: pointer;
-      margin-bottom: 12px;
-    }
-    
-    /* Radio button styling */
-    .radio-group {
-      display: flex;
-      gap: 16px;
-      margin-top: 5px;
-      margin-bottom: 16px;
-    }
-    
-    .radio-group label {
-      display: flex;
-      align-items: center;
-      font-weight: normal;
-      font-size: 14px;
-      color: #333;
-      cursor: pointer;
-    }
-    
-    .radio-group input[type="radio"] {
-      margin-right: 6px;
-    }
-    
-    /* Button styling */
-    .btn {
-      padding: 12px 24px;
-      border-radius: 6px;
-      border: none;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    
-    .btn-primary {
-      background-color: #4285f4;
-      color: white;
-    }
-    
-    .btn-primary:hover {
-      background-color: #3367d6;
-    }
-    
-    /* Category and city selection styling */
-    .category-selector-container, .ville-secteur-container {
-      margin-bottom: 16px;
-    }
-    
-    #categoryDropdownBtn, #citySelectorBtn {
-      width: 100%;
-      padding: 12px;
-      text-align: left;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      background: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    
-    /* Category item styling */
-    .category-item {
-      padding: 12px 16px;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #f0f0f0;
-      transition: background-color 0.1s;
-    }
-    
-    .category-item:hover {
-      background-color: #f8f9fa;
-    }
-    
-    .category-icon {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background-color: #f0f0f0;
-      margin-right: 12px;
-    }
-    
-    .category-icon i {
-      font-size: 16px;
-      color: #5f6368;
-    }
-    
-    /* City item styling */
-    .city-item {
-      padding: 12px 16px;
-      cursor: pointer;
-      border-bottom: 1px solid #f0f0f0;
-      transition: background-color 0.1s;
-    }
-    
-    .city-item:hover {
-      background-color: #f8f9fa;
-    }
-    
-    /* Image upload styling */
-    .image-upload-container {
-      margin-top: 15px;
-      margin-bottom: 20px;
-    }
-    
-    .image-preview-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 12px;
-    }
-    
-    .image-preview {
-      position: relative;
-      width: 110px;
-      height: 110px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    
-    .image-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .image-preview .remove-image {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: rgba(255,255,255,0.9);
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      text-align: center;
-      line-height: 22px;
-      cursor: pointer;
-      font-weight: bold;
-      color: #d93025;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-  </style>
-
   <div class="form-section">
     <h2>Qu'annoncez-vous aujourd'hui ?</h2>
     <p>Grâce à ces informations les acheteurs peuvent trouver votre annonce plus facilement.</p>
@@ -357,7 +82,7 @@
   <div class="form-section">
     <h2>Vos coordonnées</h2>
     <%= form.label :phone, "Numéro de téléphone *", class: "form-label" %>
-    <%= form.text_field :phone, placeholder: "Numéro de téléphone", value: "", class: "form-control" %>
+    <%= form.text_field :phone, placeholder: "Numéro de téléphone", class: "form-control" %>
     <div class="mb-3">
       <%= form.check_box :phone_hidden, class: "form-check-input" %> 
       <label for="annonce_phone_hidden" class="form-check-label">Masquer le numéro dans l'annonce</label>
@@ -414,10 +139,6 @@
     
     <%= form.label :prix, "Prix *", class: "form-label" %>
     <%= form.text_field :prix, placeholder: "Entrer le prix", class: "form-control" %>
-  </div>
-
-  <div class="d-grid">
-    <%= form.submit "CONTINUER", class: "btn btn-primary" %>
   </div>
   
   <!-- Panel Overlay Background -->
@@ -782,51 +503,35 @@
       
       <div class="city-list-container" style="max-height: calc(100vh - 160px); overflow-y: auto;">
         <ul class="list-unstyled mb-0">
-          <li class="city-item" data-value="marrakech">
-            <div class="d-flex align-items-center">
-              <span>Marrakech</span>
-            </div>
-          </li>
-          <li class="city-item" data-value="tanger">
-            <div class="d-flex align-items-center">
-              <span>Tanger</span>
-            </div>
-          </li>
-          <li class="city-item" data-value="casablanca">
-            <div class="d-flex align-items-center">
-              <span>Casablanca</span>
-            </div>
-          </li>
-          <li class="city-item" data-value="fes">
-            <div class="d-flex align-items-center">
-              <span>Fès</span>
-            </div>
-          </li>
-          <li class="city-item" data-value="safi">
-            <div class="d-flex align-items-center">
-              <span>Safi</span>
-            </div>
-          </li>
-          <li class="city-item" data-value="agadir">
-            <div class="d-flex align-items-center">
-              <span>Agadir</span>
-            </div>
-          </li>
-          <li class="city-item" data-value="temara">
-            <div class="d-flex align-items-center">
-              <span>Temara</span>
-            </div>
-          </li>
-          <li class="city-item" data-value="mohammedia">
-            <div class="d-flex align-items-center">
-              <span>Mohammedia</span>
-            </div>
-          </li>
-          <li class="city-item" data-value="sale">
-            <div class="d-flex align-items-center">
-              <span>Salé</span>
-            </div>
-          </li>
+          <li class="city-item" data-value="casablanca"><span>Casablanca</span></li>
+          <li class="city-item" data-value="rabat"><span>Rabat</span></li>
+          <li class="city-item" data-value="fes"><span>Fès</span></li>
+          <li class="city-item" data-value="marrakech"><span>Marrakech</span></li>
+          <li class="city-item" data-value="agadir"><span>Agadir</span></li>
+          <li class="city-item" data-value="tanger"><span>Tanger</span></li>
+          <li class="city-item" data-value="meknes"><span>Meknès</span></li>
+          <li class="city-item" data-value="oujda"><span>Oujda</span></li>
+          <li class="city-item" data-value="kenitra"><span>Kénitra</span></li>
+          <li class="city-item" data-value="tetouan"><span>Tétouan</span></li>
+          <li class="city-item" data-value="sale"><span>Salé</span></li>
+          <li class="city-item" data-value="safi"><span>Safi</span></li>
+          <li class="city-item" data-value="el-jadida"><span>El Jadida</span></li>
+          <li class="city-item" data-value="khouribga"><span>Khouribga</span></li>
+          <li class="city-item" data-value="beni-mellal"><span>Béni Mellal</span></li>
+          <li class="city-item" data-value="mohammedia"><span>Mohammedia</span></li>
+          <li class="city-item" data-value="nador"><span>Nador</span></li>
+          <li class="city-item" data-value="taza"><span>Taza</span></li>
+          <li class="city-item" data-value="settat"><span>Settat</span></li>
+          <li class="city-item" data-value="tiznit"><span>Tiznit</span></li>
+          <li class="city-item" data-value="ouarzazate"><span>Ouarzazate</span></li>
+          <li class="city-item" data-value="chefchaouen"><span>Chefchaouen</span></li>
+          <li class="city-item" data-value="essaouira"><span>Essaouira</span></li>
+          <li class="city-item" data-value="guelmim"><span>Guelmim</span></li>
+          <li class="city-item" data-value="laayoune"><span>Laâyoune</span></li>
+          <li class="city-item" data-value="dakhla"><span>Dakhla</span></li>
+          <li class="city-item" data-value="al-hoceima"><span>Al Hoceima</span></li>
+          <li class="city-item" data-value="berkane"><span>Berkane</span></li>
+          <li class="city-item" data-value="larache"><span>Larache</span></li>
         </ul>
       </div>
     </div>
@@ -834,7 +539,7 @@
 <% end %>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('turbo:load', function() {
     // Panel elements
     const categoryPanel = document.getElementById('categoryPanel');
     const cityPanel = document.getElementById('cityPanel');
@@ -849,9 +554,9 @@
     // Form inputs
     const categoryHiddenInput = document.getElementById('categoryHiddenInput');
     const selectedCategoryText = document.getElementById('selectedCategoryText');
-    const villeSecteurInput = document.getElementById('villeSecteurInput');
+    const villeSecteurInput = document.getElementById('annonce_ville_secteur') || document.getElementById('villeSecteurInput');
     const adresseBienInput = document.getElementById('adresseBienInput');
-    const localisationCombinedInput = document.getElementById('localisationCombinedInput');
+    const localisationCombinedInput = document.getElementById('annonce_localisation') || document.getElementById('localisationCombinedInput');
     const selectedCityText = document.getElementById('selectedCityText');
     const citySearchInput = document.getElementById('citySearchInput');
     
@@ -908,6 +613,26 @@
         closePanel(categoryPanel);
         closePanel(cityPanel);
       });
+    }
+    
+    // Helper function to find parent category for a subcategory value
+    function findCategoryParent(categoryValue) {
+      let parentCategory = null;
+      
+      // Check in each submenu for the category value
+      document.querySelectorAll('.category-sub-menu').forEach(submenu => {
+        const submenuId = submenu.id;
+        const parentId = submenuId.replace('-submenu', '');
+        
+        // Look for the category value in this submenu
+        submenu.querySelectorAll('.category-item[data-value]').forEach(item => {
+          if (item.getAttribute('data-value') === categoryValue) {
+            parentCategory = parentId;
+          }
+        });
+      });
+      
+      return parentCategory;
     }
     
     // Handle main category clicks to show submenu
@@ -1008,36 +733,63 @@
       adresseBienInput.addEventListener('input', updateLocalisationField);
     }
     
-    // Pre-select category if exists
-    if (categoryHiddenInput && categoryHiddenInput.value && selectedCategoryText) {
-      const selectedItem = document.querySelector(`.category-item[data-value="${categoryHiddenInput.value}"]`);
-      if (selectedItem) {
-        selectedCategoryText.innerText = selectedItem.querySelector('span').innerText;
+    // Initialize category value from existing data
+    if (categoryHiddenInput && categoryHiddenInput.value) {
+      const categoryValue = categoryHiddenInput.value.trim();
+      if (categoryValue) {
+        console.log('Found category value:', categoryValue);
+        let categoryText = '';
+        let categoryFound = false;
+        
+        // Search all subcategories for a match
+        document.querySelectorAll('.category-sub-menu .category-item[data-value]').forEach(function(item) {
+          if (item.getAttribute('data-value') === categoryValue) {
+            categoryText = item.querySelector('span').innerText;
+            categoryFound = true;
+          }
+        });
+        
+        if (categoryFound && selectedCategoryText) {
+          console.log('Setting category text to:', categoryText);
+          selectedCategoryText.innerText = categoryText;
+        } else {
+          console.log('Category not found in subcategories');
+        }
       }
     }
     
-    // Pre-select city if exists and initialize localisation
-    if (villeSecteurInput && villeSecteurInput.value && selectedCityText) {
-      const selectedItem = document.querySelector(`.city-item[data-value="${villeSecteurInput.value}"]`);
-      if (selectedItem) {
-        selectedCityText.innerText = selectedItem.querySelector('span').innerText;
-      }
-      updateLocalisationField();
-    } else if (localisationCombinedInput && localisationCombinedInput.value) {
-      // If there's an existing localisation but no ville_secteur, try to parse it
-      const locParts = localisationCombinedInput.value.split(',');
-      if (locParts.length > 0) {
-        const villeCandidate = locParts[0].trim().toLowerCase();
-        document.querySelectorAll('.city-item').forEach(function(item) {
-          const cityValue = item.getAttribute('data-value');
-          if (villeCandidate === cityValue || villeCandidate === item.querySelector('span').innerText.toLowerCase()) {
-            if (villeSecteurInput) villeSecteurInput.value = cityValue;
-            if (selectedCityText) selectedCityText.innerText = item.querySelector('span').innerText;
-            if (locParts.length > 1 && adresseBienInput) {
-              adresseBienInput.value = locParts.slice(1).join(',').trim();
-            }
+    // Initialize city value from existing localisation data
+    if (localisationCombinedInput && localisationCombinedInput.value) {
+      const locValue = localisationCombinedInput.value;
+      // Parse localisation to extract city name (before the comma)
+      const cityName = locValue.split(',')[0].trim().toLowerCase();
+      
+      // Try to find matching city
+      let cityFound = false;
+      document.querySelectorAll('.city-item').forEach(function(item) {
+        const itemCityName = item.querySelector('span').innerText.toLowerCase();
+        const itemCityValue = item.getAttribute('data-value').toLowerCase();
+        
+        if (cityName === itemCityName || cityName === itemCityValue) {
+          // We found a match
+          if (selectedCityText) {
+            selectedCityText.innerText = item.querySelector('span').innerText;
           }
-        });
+          if (villeSecteurInput) {
+            villeSecteurInput.value = item.getAttribute('data-value');
+          }
+          cityFound = true;
+          
+          // If there's additional address info after the comma
+          if (locValue.includes(',') && adresseBienInput) {
+            adresseBienInput.value = locValue.substring(locValue.indexOf(',') + 1).trim();
+          }
+        }
+      });
+      
+      // If no city match was found, just show the whole localisation as is
+      if (!cityFound && selectedCityText) {
+        selectedCityText.innerText = locValue;
       }
     }
     
@@ -1156,5 +908,56 @@
         }
       });
     });
+
+    // Add debugging logging to help diagnose issues
+    console.log('Category hidden input value:', categoryHiddenInput ? categoryHiddenInput.value : 'not found');
+    console.log('Localisation input value:', localisationCombinedInput ? localisationCombinedInput.value : 'not found');
+  });
+
+  // Immediately initialize category and city values after page load
+  document.addEventListener('turbo:load', function initialSetup() {
+    // Find the category and set it if possible
+    if (categoryHiddenInput && categoryHiddenInput.value) {
+      const categoryValue = categoryHiddenInput.value.trim();
+      
+      // Try to find this category in any submenu
+      let foundItem = null;
+      let foundSubmenu = null;
+      let foundParent = null;
+      
+      // Check all submenus for this category
+      document.querySelectorAll('.category-sub-menu').forEach(submenu => {
+        submenu.querySelectorAll('.category-item[data-value]').forEach(item => {
+          if (item.getAttribute('data-value') === categoryValue) {
+            foundItem = item;
+            foundSubmenu = submenu;
+            foundParent = submenu.id.replace('-submenu', '');
+          }
+        });
+      });
+      
+      // If we found the category, set the text
+      if (foundItem && selectedCategoryText) {
+        selectedCategoryText.innerText = foundItem.querySelector('span').innerText;
+        console.log('Category found and text set to:', selectedCategoryText.innerText);
+      }
+    }
+    
+    // Set up the city from localization if possible
+    if (localisationCombinedInput && localisationCombinedInput.value) {
+      const locValue = localisationCombinedInput.value;
+      const cityName = locValue.split(',')[0].trim();
+      
+      document.querySelectorAll('.city-item').forEach(item => {
+        const itemText = item.querySelector('span').innerText;
+        if (itemText.toLowerCase() === cityName.toLowerCase() || 
+            item.getAttribute('data-value').toLowerCase() === cityName.toLowerCase()) {
+          if (selectedCityText) {
+            selectedCityText.innerText = itemText;
+            console.log('City found and text set to:', itemText);
+          }
+        }
+      });
+    }
   });
 </script>

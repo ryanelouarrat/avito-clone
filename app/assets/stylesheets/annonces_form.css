@@ -1,0 +1,272 @@
+/* Styles for the annonces form */
+
+/* Reset and common styles */
+body { 
+  font-family: Arial, sans-serif; 
+  background: #f5f5f5; 
+  padding: 0; 
+  margin: 0; 
+}
+
+/* Panel styles - side panels for categories and cities */
+.side-panel {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background-color: white;
+  z-index: 2000;
+  transition: right 0.3s ease-in-out;
+  overflow-y: auto;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+}
+
+.side-panel.show {
+  right: 0;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.panel-body {
+  padding: 20px;
+}
+
+.panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1999;
+  display: none;
+}
+
+.panel-overlay.show {
+  display: block;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+/* Form section styling */
+.form-section { 
+  background: white; 
+  padding: 24px; 
+  border-radius: 8px; 
+  margin-bottom: 20px; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12); 
+}
+
+.form-section h2 { 
+  margin-top: 0; 
+  margin-bottom: 10px; 
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-section p {
+  margin-top: 0;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* Form controls */
+.form-label { 
+  display: block; 
+  margin-top: 10px; 
+  margin-bottom: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: white;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #4285f4;
+  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.1);
+}
+
+.form-select {
+  appearance: none;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: white;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+/* Radio button styling */
+.radio-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 5px;
+  margin-bottom: 16px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 6px;
+}
+
+/* Button styling */
+.btn {
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary {
+  background-color: #4285f4;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #3367d6;
+}
+
+/* Category and city selection styling */
+.category-selector-container, .ville-secteur-container {
+  margin-bottom: 16px;
+}
+
+#categoryDropdownBtn, #citySelectorBtn {
+  width: 100%;
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Category item styling */
+.category-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.1s;
+}
+
+.category-item:hover {
+  background-color: #f8f9fa;
+}
+
+.category-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  margin-right: 12px;
+}
+
+.category-icon i {
+  font-size: 16px;
+  color: #5f6368;
+}
+
+.city-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.1s;
+}
+
+.city-item:hover {
+  background-color: #f8f9fa;
+}
+
+.image-upload-container {
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.image-preview {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  line-height: 22px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #d93025;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}

@@ -99,18 +99,37 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    setupSubmitButton();
+  });
+  
+  // Also handle Turbo navigation events
+  document.addEventListener('turbo:load', function() {
+    setupSubmitButton();
+  });
+  
+  function setupSubmitButton() {
     // Sticky submit button functionality
     const stickySubmitBtn = document.getElementById('stickySubmitBtn');
-    const formSubmitBtn = document.querySelector('form input[type="submit"]');
+    const form = document.querySelector('form');
     
-    if (stickySubmitBtn && formSubmitBtn) {
+    if (stickySubmitBtn && form) {
       stickySubmitBtn.addEventListener('click', function() {
-        formSubmitBtn.click();
+        // Try to find a submit button in the form first
+        const formSubmitBtn = form.querySelector('input[type="submit"]');
+        if (formSubmitBtn) {
+          formSubmitBtn.click();
+        } else {
+          // Fallback to manual form submission
+          form.submit();
+        }
       });
     }
 
     // Add padding to the bottom of the page to prevent content from being hidden behind the sticky bar
-    const stickyBarHeight = document.querySelector('.sticky-continuer-bar').offsetHeight;
-    document.body.style.paddingBottom = (stickyBarHeight + 20) + 'px';
-  });
+    const stickyBar = document.querySelector('.sticky-continuer-bar');
+    if (stickyBar) {
+      const stickyBarHeight = stickyBar.offsetHeight;
+      document.body.style.paddingBottom = (stickyBarHeight + 20) + 'px';
+    }
+  }
 </script>

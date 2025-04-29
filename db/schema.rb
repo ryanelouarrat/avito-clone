@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_12_150107) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_29_165553) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -56,6 +56,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_12_150107) do
     t.string "category"
     t.string "type"
     t.string "transaction_type"
+    t.string "phone"
+    t.boolean "phone_hidden"
     t.index ["utilisateur_id"], name: "index_annonces_on_utilisateur_id"
   end
 

@@ -61,13 +61,20 @@
                 <div class="col-md-4 col-sm-6 mb-3">
                   <%= link_to annonce_path(annonce), class: "text-decoration-none" do %>
                     <div class="card h-100 shadow-hover">
-                      <div class="card-img-top" style="height: 150px; overflow: hidden;">
+                      <div class="card-img-top position-relative" style="height: 150px; overflow: hidden;">
                         <% if annonce.images.attached? && annonce.images.first.present? %>
                           <%= image_tag annonce.images.first, class: "w-100 h-100 object-fit-cover" %>
                         <% else %>
                           <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
                             <i class="bi bi-image text-muted" style="font-size: 2rem;"></i>
                           </div>
+                        <% end %>
+                        
+                        <!-- Edit button for owner -->
+                        <% if current_utilisateur == @utilisateur %>
+                          <%= link_to edit_annonce_path(annonce), class: "edit-icon-btn" do %>
+                            <i class="bi bi-pencil-square"></i>
+                          <% end %>
                         <% end %>
                       </div>
                       <div class="card-body p-2">
@@ -121,5 +128,20 @@
   .profile-img {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     border: 3px solid #fff;
+  }
+  .edit-icon-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    padding: 5px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 1.2rem;
+  }
+  .edit-icon-btn:hover {
+    background-color: #007bff;
+    color: #fff;
   }
 </style>

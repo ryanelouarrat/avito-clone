@@ -2,6 +2,7 @@ class Annonce < ApplicationRecord
   belongs_to :utilisateur
   has_many_attached :images
   validates :titre, :description, :prix, :localisation, :date_publication, :category, :transaction_type, presence: true
+  validates :phone, presence: true
   validates :transaction_type, inclusion: { in: %w(sell buy), message: "%{value} is not a valid transaction type" }
   
   # Only validate images for new records
